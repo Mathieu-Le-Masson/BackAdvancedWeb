@@ -5,6 +5,8 @@ class User extends Model {
     public id!: number;
     public name!: string;
     public email!: string;
+    public password!: string;
+    public role!: string;
 }
 
 User.init({
@@ -21,6 +23,15 @@ User.init({
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    role: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'user',
     },
 }, {
     sequelize,

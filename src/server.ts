@@ -3,6 +3,9 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import userRoutes from './routes/users';
 import sequelize from './config/database';
+import { authRouter } from './middleware/auth';
+import { authenticateJWT } from './middleware/auth';
+import { initializeAdmin } from './config/initAdmin';
 
 dotenv.config();
 
@@ -12,13 +15,14 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use('/auth', authRouter);
 
 // Routes
 app.get('/', (req, res) => {
     res.send('BackAdvancedWeb API is running');
 });
 
-app.use('/users', userRoutes);
+app.use('/users', userRoutes, authenticateJWT);
 
 // Additional logging to debug the issue
 console.log('Before attempting to synchronize database...');
@@ -38,6 +42,15 @@ try {
 } catch (error) {
     console.error('Error during database synchronization:', error);
 }
+
+// After database connection is established
+sequelize.sync()
+    .then(() => {
+        return initializeAdmin();
+    })
+    .catch((error) => {
+        console.error('Error starting server:', error);
+    });
 
 // Start server
 app.listen(PORT, () => {
