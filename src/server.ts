@@ -1,13 +1,9 @@
+// src/server.ts
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
-import userRoutes from './routes/users';
-import sequelize from './config/database';
-import { authRouter } from './middleware/auth';
-import { authenticateJWT } from './middleware/auth';
+import sequelize, { createDatabaseIfNotExists } from './config/database';
+import routes from './routes';
 import { initializeAdmin } from './config/initAdmin';
-
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,44 +11,32 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use('/auth', authRouter);
+app.use(routes);
 
-// Routes
-app.get('/', (req, res) => {
-    res.send('BackAdvancedWeb API is running');
-});
+// Start server with database initialization
+const startServer = async () => {
+    try {
+        // First create the database if it doesn't exist
+        await createDatabaseIfNotExists();
 
-app.use('/users', userRoutes, authenticateJWT);
+        // Then connect and sync models
+        await sequelize.authenticate();
+        console.log('Database connection established successfully.');
 
-// Additional logging to debug the issue
-console.log('Before attempting to synchronize database...');
-console.log('Sequelize instance:', sequelize);
+        await sequelize.sync({ force: false });
+        console.log('Database synchronized successfully.');
 
-try {
-    // Synchronize models with database
-    console.log('Attempting to synchronize database...');
-    sequelize.authenticate().then(() => {
-        console.log('Database connection established');
-        return sequelize.sync();
-    }).then(() => {
-        console.log('Database synchronized');
-    }).catch((error) => {
-        console.error('Unable to synchronize the database:', error);
-    });
-} catch (error) {
-    console.error('Error during database synchronization:', error);
-}
+        // Initialize admin user
+        await initializeAdmin();
 
-// After database connection is established
-sequelize.sync()
-    .then(() => {
-        return initializeAdmin();
-    })
-    .catch((error) => {
+        app.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`);
+        });
+    } catch (error) {
         console.error('Error starting server:', error);
-    });
+        process.exit(1);
+    }
+};
 
-// Start server
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+// Start the server
+startServer();
