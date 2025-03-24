@@ -1,31 +1,30 @@
 services:
   postgres:
-    image: postgres:17
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: advancedwebdb
+    image: mathieulemassoncesi/backadvancedweb-postgres
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: advancedwebdb
 
   api:
-    build: .
+    image: mathieulemassoncesi/backadvancedweb-api
+    ports:
+      - "3000:3000"
     depends_on:
       - postgres
     environment:
-      NODE_ENV: production
-      DB_HOST: postgres
+      DB_NAME: advancedwebdb
       DB_USER: postgres
       DB_PASSWORD: postgres
-      DB_NAME: advancedwebdb
+      DB_HOST: postgres
       DB_PORT: 5432
-      JWT_SECRET: your_secret_key
-    ports:
-      - "3000:3000"
-    restart: always
+      PORT: 3000
+      ACCESS_TOKEN_SECRET: ddb3f72be4dac8beeda4c1f86af91c073b8fff39607ee48e8b987b5f3e9d8b274e61b515c4eb72250f414d22219291e2d692b600389d341a0a9b331dfcacfc67
+      REFRESH_TOKEN_SECRET: 005ff051ec928e9ee2aec0f986984b34537316fa06c33186ff9fc99d559a4a77df3d63634ed33ab6fbf6cffab357091ce1e05f8e14507efc2d2fa0dd0cc8fc29
 
 volumes:
   postgres_data:
