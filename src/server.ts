@@ -4,14 +4,18 @@ import cors from 'cors';
 import sequelize, { createDatabaseIfNotExists } from './config/database';
 import routes from './routes';
 import { initializeAdmin } from './config/initAdmin';
+import { specs, swaggerUi } from './config/swagger';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(routes);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // Start server with database initialization
 const startServer = async () => {
@@ -31,6 +35,7 @@ const startServer = async () => {
 
         app.listen(PORT, () => {
             console.log(`Server running on port ${PORT}`);
+            console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
         });
     } catch (error) {
         console.error('Error starting server:', error);
