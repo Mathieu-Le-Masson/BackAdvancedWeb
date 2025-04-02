@@ -1,12 +1,8 @@
 // src/routes/addressRoutes.ts
 import express from 'express';
 import * as addressController from '../controllers/addressController';
-import { authenticate } from '../middleware/auth';
 
 const router = express.Router();
-
-// Apply authentication middleware to all address routes
-router.use(authenticate);
 
 /**
  * @swagger
@@ -62,7 +58,7 @@ router.use(authenticate);
  *               items:
  *                 $ref: '#/components/schemas/Address'
  */
-router.get('/', authenticate, addressController.getAddresses);
+router.get('/', addressController.getAddresses);
 
 /**
  * @swagger
@@ -89,7 +85,7 @@ router.get('/', authenticate, addressController.getAddresses);
  *       404:
  *         description: Address not found
  */
-router.get('/:id', authenticate, addressController.getAddressById);
+router.get('/:id', addressController.getAddressById);
 
 /**
  * @swagger
@@ -130,7 +126,7 @@ router.get('/:id', authenticate, addressController.getAddressById);
  *       500:
  *         description: Server error
  */
-router.post('/', authenticate, addressController.createAddress);
+router.post('/', addressController.createAddress);
 
 /**
  * @swagger

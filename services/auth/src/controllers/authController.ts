@@ -1,18 +1,37 @@
-// src/controllers/authController.ts
-import { Request, Response } from 'express';
+import {Request, Response} from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import User from '../models/User';
 
+export const authenticate = (req: Request, res: Response): void => {
+    try {
+        const authHeader = req.headers.authorization;
+
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            res.status(401).json({message: 'Token manquant'});
+            return;
+        }
+
+        const token = authHeader.split(' ')[1];
+        jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
+
+        // Si on arrive ici, le token est valide
+        res.status(200).send();
+    } catch (error) {
+        res.status(401).json({message: 'Token invalide'});
+    }
+};
+
+
 export const register = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { name, firstName, email, password, userType } = req.body;
+        const {name, firstName, email, password, userType, phone, refCode} = req.body;
 
         // Check if user already exists
-        const existingUser = await User.findOne({ where: { email } });
+        const existingUser = await User.findOne({where: {email}});
         if (existingUser) {
-            res.status(400).json({ message: 'User already exists' });
+            res.status(400).json({message: 'User already exists'});
             return;
         }
 
@@ -31,8 +50,9 @@ export const register = async (req: Request, res: Response): Promise<void> => {
             password: hashedPassword,
             userType,
             referralCode,
-            referredBy: req.body.referralCode ?
-                (await User.findOne({ where: { referralCode: req.body.referralCode } }))?.id :
+            phone,
+            referredBy: refCode ?
+                (await User.findOne({where: {referralCode: refCode}}))?.id :
                 null
         });
 
@@ -45,35 +65,36 @@ export const register = async (req: Request, res: Response): Promise<void> => {
                 email: user.email,
                 phone: user.phone,
                 userType: user.userType,
-                referralCode: user.referralCode
+                referralCode: user.referralCode,
+                referredBy: user.referredBy,
             }
         });
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
+        res.status(500).json({message: 'Server error', error});
     }
 };
 
 export const login = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { email, password } = req.body;
+        const {email, password} = req.body;
 
         // Find user by email
-        const user = await User.findOne({ where: { email } });
+        const user = await User.findOne({where: {email}});
         if (!user) {
-            res.status(401).json({ message: 'Invalid credentials' });
+            res.status(401).json({message: 'Invalid credentials'});
             return;
         }
 
         // Check if user is active
         if (!user.isActive) {
-            res.status(401).json({ message: 'Account is deactivated' });
+            res.status(401).json({message: 'Account is deactivated'});
             return;
         }
 
         // Verify password
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
-            res.status(401).json({ message: 'Invalid credentials' });
+            res.status(401).json({message: 'Invalid credentials'});
             return;
         }
 
@@ -85,13 +106,13 @@ export const login = async (req: Request, res: Response): Promise<void> => {
                 userType: user.userType
             },
             process.env.JWT_SECRET || 'your-secret-key',
-            { expiresIn: '1h' }
+            {expiresIn: '1h'}
         );
 
         const refreshToken = jwt.sign(
-            { userId: user.id },
+            {userId: user.id},
             process.env.JWT_REFRESH_SECRET || 'your-refresh-secret-key',
-            { expiresIn: '7d' }
+            {expiresIn: '7d'}
         );
 
         res.status(200).json({
@@ -108,17 +129,17 @@ export const login = async (req: Request, res: Response): Promise<void> => {
             refreshToken
         });
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
+        res.status(500).json({message: 'Server error', error});
     }
 };
 
 export const refreshToken = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { refreshToken: token } = req.body;
+        const {refreshToken: token} = req.body;
 
         // Check if refresh token is provided
         if (!token) {
-            res.status(400).json({ message: 'Refresh token is required' });
+            res.status(400).json({message: 'Refresh token is required'});
             return;
         }
 
@@ -132,21 +153,21 @@ export const refreshToken = async (req: Request, res: Response): Promise<void> =
             // Find user
             const user = await User.findByPk(decoded.userId);
             if (!user) {
-                res.status(404).json({ message: 'User not found' });
+                res.status(404).json({message: 'UserRoutes not found'});
                 return;
             }
 
             // Check if user is active
             if (!user.isActive) {
-                res.status(401).json({ message: 'Account is deactivated' });
+                res.status(401).json({message: 'Account is deactivated'});
                 return;
             }
 
             // Generate new access token
             const accessToken = jwt.sign(
-                { userId: user.id, userType: user.userType },
+                {userId: user.id, userType: user.userType},
                 process.env.JWT_SECRET || 'your-secret-key',
-                { expiresIn: '1h' }
+                {expiresIn: '1h'}
             );
 
             res.status(200).json({
@@ -161,10 +182,10 @@ export const refreshToken = async (req: Request, res: Response): Promise<void> =
                 }
             });
         } catch (error) {
-            res.status(401).json({ message: 'Invalid or expired refresh token' });
+            res.status(401).json({message: 'Invalid or expired refresh token'});
             return;
         }
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
+        res.status(500).json({message: 'Server error', error});
     }
 };
