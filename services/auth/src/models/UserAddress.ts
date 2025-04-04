@@ -1,50 +1,50 @@
-import {DataTypes, Model} from 'sequelize';
+import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/database';
 
-class Address extends Model {
+class UserAddress extends Model {
     public id!: string;
     public streetNumber!: string;
-    public complement!: string;
+    public complement?: string;
     public street!: string;
     public postalCode!: string;
     public city!: string;
     public country!: string;
 }
 
-Address.init({
+UserAddress.init({
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
-        primaryKey: true,
+        primaryKey: true
     },
     streetNumber: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
     },
     complement: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: true
     },
     street: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
     },
     postalCode: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
     },
     city: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
     },
     country: {
         type: DataTypes.STRING,
-        allowNull: false,
-    },
+        allowNull: false
+    }
 }, {
     sequelize,
-    modelName: 'address',
-    tableName: 'addresses',
+    tableName: 'user_addresses',
+    modelName: 'UserAddress'
 });
 
-export default Address;
+export default UserAddress;

@@ -2,7 +2,9 @@ import {Request, Response} from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
+import sequelize from '../config/database';
 import User from '../models/User';
+import UserAddress from '../models/UserAddress';
 
 export const authenticate = (req: Request, res: Response): void => {
     try {
@@ -26,7 +28,7 @@ export const authenticate = (req: Request, res: Response): void => {
 
 export const register = async (req: Request, res: Response): Promise<void> => {
     try {
-        const {name, firstName, email, password, userType, phone, refCode} = req.body;
+        const {name, firstName, email, password, userType, phone, refCode, address} = req.body;
 
         // Check if user already exists
         const existingUser = await User.findOne({where: {email}});
@@ -42,33 +44,61 @@ export const register = async (req: Request, res: Response): Promise<void> => {
         // Generate referral code
         const referralCode = crypto.randomBytes(6).toString('hex');
 
-        // Create user
-        const user = await User.create({
-            name,
-            firstName,
-            email,
-            password: hashedPassword,
-            userType,
-            referralCode,
-            phone,
-            referredBy: refCode ?
-                (await User.findOne({where: {referralCode: refCode}}))?.id :
-                null
-        });
+        // Démarrer une transaction pour garantir la cohérence des données
+        const transaction = await sequelize.transaction();
 
-        res.status(201).json({
-            message: 'User created successfully',
-            user: {
-                id: user.id,
-                name: user.name,
-                firstName: user.firstName,
-                email: user.email,
-                phone: user.phone,
-                userType: user.userType,
-                referralCode: user.referralCode,
-                referredBy: user.referredBy,
+        try {
+            let addressId = null;
+
+            // Si une adresse est fournie, la créer d'abord
+            if (address) {
+                const newAddress = await UserAddress.create({
+                    streetNumber: address.streetNumber,
+                    street: address.street,
+                    complement: address.complement || null,
+                    postalCode: address.postalCode,
+                    city: address.city,
+                    country: address.country
+                }, { transaction });
+
+                addressId = newAddress.id;
             }
-        });
+
+            // Create user with address reference
+            const user = await User.create({
+                name,
+                firstName,
+                email,
+                password: hashedPassword,
+                userType,
+                referralCode,
+                phone,
+                addressId,
+                referredBy: refCode ?
+                    (await User.findOne({where: {referralCode: refCode}}))?.id :
+                    null
+            }, { transaction });
+
+            await transaction.commit();
+
+            res.status(201).json({
+                message: 'User created successfully',
+                user: {
+                    id: user.id,
+                    name: user.name,
+                    firstName: user.firstName,
+                    email: user.email,
+                    phone: user.phone,
+                    userType: user.userType,
+                    referralCode: user.referralCode,
+                    referredBy: user.referredBy,
+                    addressId: user.addressId
+                }
+            });
+        } catch (error) {
+            await transaction.rollback();
+            throw error;
+        }
     } catch (error) {
         res.status(500).json({message: 'Server error', error});
     }

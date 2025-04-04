@@ -1,5 +1,6 @@
-import { DataTypes, Model } from 'sequelize';
+import {DataTypes, Model} from 'sequelize';
 import sequelize from '../config/database';
+import UserAddress from './UserAddress';
 
 class User extends Model {
     public id!: string;
@@ -43,6 +44,10 @@ User.init({
     addressId: {
         type: DataTypes.UUID,
         allowNull: true,
+        references: {
+            model: UserAddress,
+            key: 'id'
+        }
     },
     password: {
         type: DataTypes.STRING,
@@ -81,5 +86,8 @@ User.init({
 // Self-referencing relationship for referrals
 User.hasMany(User, {as: 'referrals', foreignKey: 'referredBy'});
 User.belongsTo(User, {as: 'referrer', foreignKey: 'referredBy'});
+
+// Relationship with UserAddress, several users can have the same address
+User.belongsTo(UserAddress, {foreignKey: 'addressId', as: 'address'});
 
 export default User;

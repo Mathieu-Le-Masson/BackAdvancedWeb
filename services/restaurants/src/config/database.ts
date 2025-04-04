@@ -1,16 +1,15 @@
-// src/config/database.ts
 import { Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
 import { Client } from 'pg';
-import path from "path";
+import path from 'path';
 
-dotenv.config({ path: path.resolve(__dirname, '../../../../.env') });
-
-const dbName = process.env.DB_NAME || 'advancedwebdb';
+const dbName = process.env.DB_NAME || 'restaurants_db';
 const dbUser = process.env.DB_USER || 'postgres';
 const dbPassword = process.env.DB_PASSWORD || 'postgres';
 const dbHost = process.env.DB_HOST || 'postgres';
 const dbPort = parseInt(process.env.DB_PORT || '5432');
+
+console.log('Configuration BD:', { dbName, dbUser, dbHost, dbPort, passwordDefined: !!dbPassword });
 
 // Function to create database if it doesn't exist
 export async function createDatabaseIfNotExists() {

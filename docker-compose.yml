@@ -10,28 +10,25 @@ services:
       - app-network
     depends_on:
       - auth-service
-      - address-service
-
-  # Les autres services ne devraient pas avoir de "ports:" configuration
-  # Ils ne seront accessibles que via le réseau interne Docker
+      - restaurant-service
 
   auth-service:
     build: ./services/auth
     container_name: auth-service
     volumes:
       - ./services/auth:/app
-      - /app/node_modules
+      - node_modules_auth:/app/node_modules
     networks:
       - app-network
     depends_on:
       - postgres
 
-  address-service:
-    build: ./services/addresses
-    container_name: address-service
+  restaurant-service:
+    build: ./services/restaurants
+    container_name: restaurant-service
     volumes:
-      - ./services/addresses:/app
-      - /app/node_modules
+      - ./services/restaurants:/app
+      - node_modules_restaurants:/app/node_modules
     networks:
       - app-network
     depends_on:
@@ -44,7 +41,6 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=advancedwebdb
     volumes:
       - postgres-data:/var/lib/postgresql/data
     networks:
@@ -64,6 +60,8 @@ services:
 
 volumes:
   postgres-data:
+  node_modules_auth:
+  node_modules_restaurants:
 
 networks:
   app-network:
