@@ -11,13 +11,12 @@ export default class ArticleService {
     }
 
     async findById(id: number | string) {
+        const article = await Article.findByPk(id);
+
+        if (!article) {
+            throw new Error('Article non trouvé');
+        }
         try {
-            const article = await Article.findByPk(id);
-
-            if (!article) {
-                throw new Error('Article non trouvé');
-            }
-
             return article;
         } catch (error) {
             throw error;
@@ -33,13 +32,12 @@ export default class ArticleService {
     }
 
     async update(id: number | string, articleData: any) {
+        const article = await Article.findByPk(id);
+
+        if (!article) {
+            throw new Error('Article non trouvé');
+        }
         try {
-            const article = await Article.findByPk(id);
-
-            if (!article) {
-                throw new Error('Article non trouvé');
-            }
-
             return await article.update(articleData);
         } catch (error) {
             throw error;
@@ -47,13 +45,12 @@ export default class ArticleService {
     }
 
     async delete(id: number | string) {
+        const article = await Article.findByPk(id);
+
+        if (!article) {
+            throw new Error('Article non trouvé');
+        }
         try {
-            const article = await Article.findByPk(id);
-
-            if (!article) {
-                throw new Error('Article non trouvé');
-            }
-
             await article.destroy();
         } catch (error) {
             throw error;

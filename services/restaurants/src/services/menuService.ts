@@ -14,15 +14,14 @@ export default class MenuService {
     }
 
     async findById(id: number | string) {
+        const menu = await Menu.findByPk(id, {
+            include: [{model: Article, as: 'articles'}]
+        });
+
+        if (!menu) {
+            throw new Error('Menu non trouvé');
+        }
         try {
-            const menu = await Menu.findByPk(id, {
-                include: [{model: Article, as: 'articles'}]
-            });
-
-            if (!menu) {
-                throw new Error('Menu non trouvé');
-            }
-
             return menu;
         } catch (error) {
             throw error;
@@ -38,13 +37,12 @@ export default class MenuService {
     }
 
     async update(id: number | string, menuData: any) {
+        const menu = await Menu.findByPk(id);
+
+        if (!menu) {
+            throw new Error('Menu non trouvé');
+        }
         try {
-            const menu = await Menu.findByPk(id);
-
-            if (!menu) {
-                throw new Error('Menu non trouvé');
-            }
-
             return await menu.update(menuData);
         } catch (error) {
             throw error;
@@ -52,13 +50,12 @@ export default class MenuService {
     }
 
     async delete(id: number | string) {
+        const menu = await Menu.findByPk(id);
+
+        if (!menu) {
+            throw new Error('Menu non trouvé');
+        }
         try {
-            const menu = await Menu.findByPk(id);
-
-            if (!menu) {
-                throw new Error('Menu non trouvé');
-            }
-
             await menu.destroy();
         } catch (error) {
             throw error;
