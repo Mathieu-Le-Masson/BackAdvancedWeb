@@ -1,12 +1,12 @@
-import { Op } from 'sequelize';
+import {Op} from 'sequelize';
 import Restaurant from '../models/Restaurant';
 import RestaurantAddress from '../models/RestaurantAdress';
+import RestaurantDocument from '../models/RestaurantDocument';
 
 export default class RestaurantService {
     async createRestaurant(restaurantData: any) {
         try {
-            const restaurant = await Restaurant.create(restaurantData);
-            return restaurant;
+            return await Restaurant.create(restaurantData);
         } catch (error) {
             throw new Error(`Erreur lors de la création du restaurant: ${error}`);
         }
@@ -85,6 +85,82 @@ export default class RestaurantService {
             return { success: true, message: 'Restaurant supprimé avec succès' };
         } catch (error) {
             throw new Error(`Erreur lors de la suppression du restaurant: ${error}`);
+        }
+    }
+
+    // Méthode pour stocker un document associé à un restaurant
+    async saveRestaurantDocument(restaurantId: string, documentData: any) {
+        const restaurant = await Restaurant.findByPk(restaurantId);
+        if (!restaurant) {
+            throw new Error('Restaurant non trouvé');
+        }
+
+        const document = new RestaurantDocument({
+            restaurantId,
+            name: documentData.name,
+            data: documentData.buffer,
+            contentType: documentData.mimetype
+        });
+
+        const savedDoc = await document.save();
+
+        // Mettre à jour le restaurant avec l'ID du document
+        await restaurant.update({
+            documentIds: [...(restaurant.documentIds || []), savedDoc._id.toString()]
+        });
+
+        return savedDoc;
+    }
+
+    // Récupérer tous les documents d'un restaurant
+    async getDocumentsByRestaurantId(restaurantId: string) {
+        try {
+            return await RestaurantDocument.find({restaurantId});
+        } catch (error) {
+            throw new Error(`Erreur lors de la récupération des documents: ${error}`);
+        }
+    }
+
+    // Récupérer un document spécifique
+    async getDocumentById(documentId: string) {
+        try {
+            const document = await RestaurantDocument.findById(documentId);
+            if (!document) {
+                throw new Error('Document non trouvé');
+            }
+            return document;
+        } catch (error) {
+            throw new Error(`Erreur lors de la récupération du document: ${error}`);
+        }
+    }
+
+    async deleteDocumentById(documentId: string) {
+        try {
+            const document = await RestaurantDocument.findById(documentId);
+            if (!document) {
+                throw new Error('Document non trouvé');
+            }
+
+            // Trouver et mettre à jour le restaurant associé
+            const restaurant = await Restaurant.findOne({
+                where: {
+                    documentIds: {
+                        [Op.contains]: [documentId]
+                    }
+                }
+            });
+
+            if (restaurant) {
+                const updatedDocumentIds = restaurant.documentIds.filter(id => id !== documentId);
+                await restaurant.update({ documentIds: updatedDocumentIds });
+            }
+
+            // Supprimer le document
+            await RestaurantDocument.findByIdAndDelete(documentId);
+
+            return { success: true };
+        } catch (error) {
+            throw new Error(`Erreur lors de la suppression du document: ${error}`);
         }
     }
 }

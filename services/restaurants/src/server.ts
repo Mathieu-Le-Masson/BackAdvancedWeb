@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import sequelize, { createDatabaseIfNotExists } from './config/database';
+import connectMongoDB from './config/mongodb';
 import restaurantRoutes from "./routes/restaurantRoutes";
 import setupSwagger from './swagger/swagger';
 
@@ -33,6 +34,9 @@ async function startServer() {
         // Synchroniser les modèles avec la base de données
         await sequelize.sync();
         console.log('Modèles synchronisés avec la base de données');
+
+        // Connecter à MongoDB
+        await connectMongoDB();
 
         // Démarrer le serveur
         app.listen(port, () => {

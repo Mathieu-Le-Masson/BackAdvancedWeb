@@ -1,8 +1,11 @@
-import express, { RequestHandler } from 'express';
+import express from 'express';
 import RestaurantController from '../controllers/restaurantController';
+import DocumentController from '../controllers/documentController';
+import upload from '../middlewares/uploadMiddleware';
 
 const router = express.Router();
 const restaurantController = new RestaurantController();
+const documentController = new DocumentController();
 
 /**
  * @swagger
@@ -172,5 +175,10 @@ router.put('/:id', restaurantController.updateRestaurant);
  *         description: Erreur serveur
  */
 router.delete('/:id', restaurantController.deleteRestaurant);
+
+router.post('/:id/documents', upload.single('document'), documentController.uploadDocument);
+router.get('/:id/documents', documentController.getRestaurantDocuments);
+router.get('/:id/documents/:documentId', documentController.getDocumentById);
+router.delete('/:id/documents/:documentId', documentController.deleteDocumentById);
 
 export default router;

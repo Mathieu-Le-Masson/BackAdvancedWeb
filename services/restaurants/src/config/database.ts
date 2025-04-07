@@ -1,7 +1,5 @@
 import { Sequelize } from 'sequelize';
-import dotenv from 'dotenv';
 import { Client } from 'pg';
-import path from 'path';
 
 const dbName = process.env.DB_NAME || 'restaurants_db';
 const dbUser = process.env.DB_USER || 'postgres';

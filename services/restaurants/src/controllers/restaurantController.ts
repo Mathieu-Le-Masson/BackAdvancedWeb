@@ -1,10 +1,10 @@
-import { Request, Response, RequestHandler } from 'express';
+import { RequestHandler } from 'express';
 import RestaurantService from '../services/restaurantService';
 
 const restaurantService = new RestaurantService();
 
 export default class RestaurantController {
-    createRestaurant: RequestHandler = async (req, res, next) => {
+    createRestaurant: RequestHandler = async (req, res) => {
         try {
             const restaurantData = req.body;
             const restaurant = await restaurantService.createRestaurant(restaurantData);
@@ -16,7 +16,7 @@ export default class RestaurantController {
         }
     };
 
-    getRestaurantById: RequestHandler = async (req, res, next) => {
+    getRestaurantById: RequestHandler = async (req, res) => {
         try {
             const { id } = req.params;
             const restaurant = await restaurantService.getRestaurantById(id);
@@ -28,7 +28,7 @@ export default class RestaurantController {
         }
     };
 
-    getAllRestaurants: RequestHandler = async (req, res, next) => {
+    getAllRestaurants: RequestHandler = async (req, res) => {
         try {
             const filters: any = {};
 
@@ -53,7 +53,7 @@ export default class RestaurantController {
         }
     };
 
-    updateRestaurant: RequestHandler = async (req, res, next) => {
+    updateRestaurant: RequestHandler = async (req, res) => {
         try {
             const { id } = req.params;
             const restaurantData = req.body;
@@ -66,7 +66,7 @@ export default class RestaurantController {
         }
     };
 
-    deleteRestaurant: RequestHandler = async (req, res, next) => {
+    deleteRestaurant: RequestHandler = async (req, res) => {
         try {
             const { id } = req.params;
             const result = await restaurantService.deleteRestaurant(id);

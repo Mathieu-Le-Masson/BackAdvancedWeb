@@ -15,6 +15,7 @@ class Restaurant extends Model {
     public openingHours!: object;
     public ownerId!: string | null;
     public isActive!: boolean;
+    public documentIds!: string[];
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 }
@@ -74,7 +75,12 @@ Restaurant.init({
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: true,
-    }
+    },
+    documentIds: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        allowNull: true,
+        defaultValue: [],
+    },
 }, {
     sequelize,
     tableName: 'restaurants',
