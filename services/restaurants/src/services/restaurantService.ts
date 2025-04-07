@@ -13,13 +13,12 @@ export default class RestaurantService {
     }
 
     async getRestaurantById(id: string) {
+        const restaurant = await Restaurant.findByPk(id);
+
+        if (!restaurant) {
+            throw new Error('Restaurant non trouvé');
+        }
         try {
-            const restaurant = await Restaurant.findByPk(id, {
-                include: [{ model: RestaurantAddress, as: 'address' }]
-            });
-            if (!restaurant) {
-                throw new Error('Restaurant non trouvé');
-            }
             return restaurant;
         } catch (error) {
             throw new Error(`Erreur lors de la récupération du restaurant: ${error}`);
@@ -61,12 +60,12 @@ export default class RestaurantService {
     }
 
     async updateRestaurant(id: string, restaurantData: any) {
-        try {
-            const restaurant = await Restaurant.findByPk(id);
-            if (!restaurant) {
-                throw new Error('Restaurant non trouvé');
-            }
+        const restaurant = await Restaurant.findByPk(id);
 
+        if (!restaurant) {
+            throw new Error('Restaurant non trouvé');
+        }
+        try {
             await restaurant.update(restaurantData);
             return restaurant;
         } catch (error) {
@@ -75,16 +74,18 @@ export default class RestaurantService {
     }
 
     async deleteRestaurant(id: string) {
-        try {
-            const restaurant = await Restaurant.findByPk(id);
-            if (!restaurant) {
-                throw new Error('Restaurant non trouvé');
-            }
+        const restaurant = await Restaurant.findByPk(id);
 
+        if (!restaurant) {
+            throw new Error('Restaurant non trouvé');
+        }
+
+        try {
             await restaurant.destroy();
             return { success: true, message: 'Restaurant supprimé avec succès' };
         } catch (error) {
-            throw new Error(`Erreur lors de la suppression du restaurant: ${error}`);
+            console.error(`Erreur lors de la suppression du restaurant:`, error);
+            throw error; // Relance l'erreur d'origine
         }
     }
 
@@ -123,11 +124,11 @@ export default class RestaurantService {
 
     // Récupérer un document spécifique
     async getDocumentById(documentId: string) {
+        const document = await RestaurantDocument.findById(documentId);
+        if (!document) {
+            throw new Error('Document non trouvé');
+        }
         try {
-            const document = await RestaurantDocument.findById(documentId);
-            if (!document) {
-                throw new Error('Document non trouvé');
-            }
             return document;
         } catch (error) {
             throw new Error(`Erreur lors de la récupération du document: ${error}`);
@@ -135,12 +136,11 @@ export default class RestaurantService {
     }
 
     async deleteDocumentById(documentId: string) {
+        const document = await RestaurantDocument.findById(documentId);
+        if (!document) {
+            throw new Error('Document non trouvé');
+        }
         try {
-            const document = await RestaurantDocument.findById(documentId);
-            if (!document) {
-                throw new Error('Document non trouvé');
-            }
-
             // Trouver et mettre à jour le restaurant associé
             const restaurant = await Restaurant.findOne({
                 where: {

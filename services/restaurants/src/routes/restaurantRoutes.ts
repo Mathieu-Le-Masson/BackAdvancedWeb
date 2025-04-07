@@ -46,6 +46,24 @@ const documentController = new DocumentController();
  *           type: string
  *         restaurantId:
  *           type: string
+ *     Document:
+ *       type: object
+ *       required:
+ *         - name
+ *         - type
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: ID unique du document
+ *         name:
+ *           type: string
+ *           description: Nom du document
+ *         type:
+ *           type: string
+ *           description: Type de document
+ *         restaurantId:
+ *           type: string
+ *           description: ID du restaurant associé
  */
 
 /**
@@ -175,6 +193,116 @@ router.put('/:id', restaurantController.updateRestaurant);
  *         description: Erreur serveur
  */
 router.delete('/:id', restaurantController.deleteRestaurant);
+
+/**
+ * @swagger
+ * /restaurants/{id}/documents:
+ *   post:
+ *     summary: Télécharger un document pour un restaurant
+ *     tags: [Documents]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID du restaurant
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               document:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       201:
+ *         description: Document téléchargé avec succès
+ *       400:
+ *         description: Données invalides
+ *       500:
+ *         description: Erreur serveur
+ */
+
+/**
+ * @swagger
+ * /restaurants/{id}/documents:
+ *   get:
+ *     summary: Récupérer tous les documents d'un restaurant
+ *     tags: [Documents]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID du restaurant
+ *     responses:
+ *       200:
+ *         description: Liste des documents récupérée avec succès
+ *       404:
+ *         description: Restaurant non trouvé
+ *       500:
+ *         description: Erreur serveur
+ */
+
+/**
+ * @swagger
+ * /restaurants/{id}/documents/{documentId}:
+ *   get:
+ *     summary: Récupérer un document par son ID
+ *     tags: [Documents]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID du restaurant
+ *       - in: path
+ *         name: documentId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID du document
+ *     responses:
+ *       200:
+ *         description: Document récupéré avec succès
+ *       404:
+ *         description: Document non trouvé
+ *       500:
+ *         description: Erreur serveur
+ */
+
+/**
+ * @swagger
+ * /restaurants/{id}/documents/{documentId}:
+ *   delete:
+ *     summary: Supprimer un document par son ID
+ *     tags: [Documents]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID du restaurant
+ *       - in: path
+ *         name: documentId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID du document
+ *     responses:
+ *       200:
+ *         description: Document supprimé avec succès
+ *       404:
+ *         description: Document non trouvé
+ *       500:
+ *         description: Erreur serveur
+ */
 
 router.post('/:id/documents', upload.single('document'), documentController.uploadDocument);
 router.get('/:id/documents', documentController.getRestaurantDocuments);

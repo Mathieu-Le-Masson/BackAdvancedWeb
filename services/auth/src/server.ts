@@ -1,5 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './config/swagger';
 import authRoutes from './routes/authRoutes';
 import usersRoutes from './routes/usersRoutes';
 import sequelize, { createDatabaseIfNotExists } from './config/database';
@@ -13,6 +15,8 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/users', usersRoutes);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Route de base pour la racine
 app.get('/', (req, res) => {

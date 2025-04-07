@@ -1,9 +1,10 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import swaggerUi from 'swagger-ui-express';
 import sequelize, { createDatabaseIfNotExists } from './config/database';
 import connectMongoDB from './config/mongodb';
 import restaurantRoutes from "./routes/restaurantRoutes";
-import setupSwagger from './swagger/swagger';
+import swaggerSpec from './config/swagger';
 
 dotenv.config();
 
@@ -11,11 +12,9 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
-
-setupSwagger(app);
-
-app.use(express.json());
 app.use('/api/restaurants', restaurantRoutes);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Route de base pour la racine
 app.get('/', (req, res) => {
