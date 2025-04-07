@@ -1,6 +1,7 @@
 // src/routes/articleRoutes.ts
 import express from 'express';
 import ArticleController from "../controllers/articleController";
+import upload from "../middlewares/uploadMiddleware";
 
 const router = express.Router();
 const articleController = new ArticleController();
@@ -201,5 +202,84 @@ router.put('/:id', articleController.updateArticle);
  *         description: Erreur serveur
  */
 router.delete('/:id', articleController.deleteArticle);
+
+/**
+ * @swagger
+ * /articles/{id}/images:
+ *   post:
+ *     summary: Télécharger une image pour un article
+ *     tags: [Articles]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       201:
+ *         description: Image téléchargée
+ *       404:
+ *         description: Article non trouvé
+ */
+router.post('/:id/images', upload.single('image'), articleController.uploadArticleImage);
+
+/**
+ * @swagger
+ * /articles/{id}/images/{imageId}:
+ *   get:
+ *     summary: Récupérer une image d'article
+ *     tags: [Articles]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: path
+ *         name: imageId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Image
+ *       404:
+ *         description: Image non trouvée
+ */
+router.get('/:id/images/:imageId', articleController.getArticleImage);
+
+/**
+ * @swagger
+ * /articles/{id}/images/{imageId}:
+ *   delete:
+ *     summary: Supprimer une image d'article
+ *     tags: [Articles]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: path
+ *         name: imageId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Image supprimée
+ *       404:
+ *         description: Image non trouvée
+ */
+router.delete('/:id/images/:imageId', articleController.deleteArticleImage);
 
 export default router;

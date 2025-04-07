@@ -1,4 +1,3 @@
-// src/controllers/articleController.ts
 import { Request, Response } from 'express';
 import ArticleService from '../services/articleService';
 
@@ -68,6 +67,59 @@ export default class ArticleController {
             } else {
                 res.status(500).json({ message: 'Erreur serveur' });
             }
+        }
+    };
+
+    uploadArticleImage = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const articleId = parseInt(req.params.id);
+            if (!req.file) {
+                res.status(400).json({ message: 'Aucune image fournie' });
+                return;
+            }
+
+            const result = await this.articleService.saveArticleImage(
+                articleId,
+                {
+                    name: req.file.originalname,
+                    buffer: req.file.buffer,
+                    mimetype: req.file.mimetype
+                }
+            );
+
+            res.status(201).json({
+                id: result._id,
+                name: result.name,
+                contentType: result.contentType,
+                url: `/api/articles/${articleId}/images/${result._id}`
+            });
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
+            res.status(500).json({ message: "Erreur lors de l'upload de l'image", error: errorMessage });
+        }
+    };
+
+    getArticleImage = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const imageId = req.params.imageId;
+            const image = await this.articleService.getImageById(imageId);
+
+            res.contentType(image.contentType);
+            res.send(image.data);
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
+            res.status(500).json({ message: "Erreur lors de la récupération de l'image", error: errorMessage });
+        }
+    };
+
+    deleteArticleImage = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const imageId = req.params.imageId;
+            await this.articleService.deleteImage(imageId);
+            res.status(200).json({ message: "Image supprimée avec succès" });
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
+            res.status(500).json({ message: "Erreur lors de la suppression de l'image", error: errorMessage });
         }
     };
 }
