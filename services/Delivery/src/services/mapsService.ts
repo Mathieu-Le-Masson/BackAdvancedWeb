@@ -41,6 +41,10 @@ export const calculateRoute = async (origin: string, destination: string) => {
 
     const distanceRoute = route.distance / 1000; // Distance en km
 
+    if (distanceRoute > 10) {
+        throw new Error("La distance entre les deux adresses est supérieure à 10 km. Livraison impossible.");
+    }
+
     //retourner la distance et le temps de trajet
     return {
         distance: Math.floor(distanceRoute),
