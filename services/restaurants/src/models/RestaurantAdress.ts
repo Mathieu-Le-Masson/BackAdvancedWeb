@@ -3,12 +3,12 @@ import sequelize from '../config/database';
 
 class RestaurantAddress extends Model {
     public id!: string;
-    public streetNumber!: string;
-    public complement?: string;
-    public street!: string;
-    public postalCode!: string;
-    public city!: string;
-    public country!: string;
+    public streetNumber!: string | null;
+    public complement?: string | null;
+    public street!: string | null;
+    public postalCode!: string | null;
+    public city!: string | null;
+    public country!: string | null;
 }
 
 RestaurantAddress.init({
@@ -19,7 +19,7 @@ RestaurantAddress.init({
     },
     streetNumber: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     complement: {
         type: DataTypes.STRING,
@@ -27,19 +27,19 @@ RestaurantAddress.init({
     },
     street: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     postalCode: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     city: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     country: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     }
 }, {
     sequelize,
