@@ -41,7 +41,7 @@ export default class RestaurantService {
                 address: addressId,
                 addressString: restaurantData.addressString,
                 isActive: restaurantData.isActive ?? true,
-                documentIds: []
+                documentId: restaurantData.documentId
             }, { transaction });
 
             await transaction.commit();
@@ -147,7 +147,7 @@ export default class RestaurantService {
 
         // Mettre à jour le restaurant avec l'ID du document
         await restaurant.update({
-            documentIds: [...(restaurant.documentIds || []), savedDoc._id.toString()]
+            documentId: savedDoc._id.toString()
         });
 
         return savedDoc;
@@ -184,15 +184,12 @@ export default class RestaurantService {
             // Trouver et mettre à jour le restaurant associé
             const restaurant = await Restaurant.findOne({
                 where: {
-                    documentIds: {
-                        [Op.contains]: [documentId]
-                    }
+                    documentId: documentId
                 }
             });
 
             if (restaurant) {
-                const updatedDocumentIds = restaurant.documentIds.filter(id => id !== documentId);
-                await restaurant.update({ documentIds: updatedDocumentIds });
+                await restaurant.update({ documentId: null });
             }
 
             // Supprimer le document
