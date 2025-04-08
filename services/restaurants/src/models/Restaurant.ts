@@ -5,7 +5,7 @@ import RestaurantAddress from './RestaurantAdress';
 class Restaurant extends Model {
     public id!: string;
     public name!: string;
-    public address!: RestaurantAddress | null;
+    public address!: string | null; // C'est l'UUID, pas l'objet RestaurantAddress
     public addressString!: string | null;
     public phone!: string;
     public email!: string;
@@ -19,6 +19,9 @@ class Restaurant extends Model {
     public documentIds!: string[];
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
+
+    // Propriété virtuelle pour l'association
+    public addressDetails?: RestaurantAddress | null;
 }
 
 Restaurant.init({
