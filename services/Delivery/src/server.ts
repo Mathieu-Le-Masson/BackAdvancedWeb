@@ -2,6 +2,8 @@ import express from 'express';
 import mapRoutes from './routes/mapRoutes';
 import sequelize, { createDatabaseIfNotExists } from './config/database';
 import cors from 'cors';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './config/swagger';
 
 
 const app = express();
@@ -14,6 +16,9 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Méthodes HTTP autorisées
     credentials: true // Si vous utilisez des cookies ou des en-têtes d'authentification
 }));
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 
 async function startServer() {
     try {
