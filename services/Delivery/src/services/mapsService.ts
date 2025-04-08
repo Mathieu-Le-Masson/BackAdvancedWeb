@@ -43,8 +43,8 @@ export const calculateRoute = async (origin: string, destination: string) => {
 
     //retourner la distance et le temps de trajet
     return {
-        distance: distanceRoute,
-        duration: route.duration / 60, // Durée en minutes
+        distance: Math.floor(distanceRoute),
+        duration: Math.floor(route.duration / 60), // Durée en minutes
     };
 
 
