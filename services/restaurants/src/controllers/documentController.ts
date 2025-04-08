@@ -91,8 +91,15 @@ export default class DocumentController {
                 return;
             }
 
-            res.contentType(document.contentType);
-            res.send(document.data);
+            // Conversion en base64
+            const base64Data = document.data.toString('base64');
+            const dataUrl = `data:${document.contentType};base64,${base64Data}`;
+
+            res.json({
+                data: dataUrl,
+                contentType: document.contentType,
+                name: document.name
+            });
         } catch (error: unknown) {
             const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
             res.status(500).json({ message: "Erreur lors de la récupération du document", error: errorMessage });
