@@ -304,6 +304,27 @@ router.delete('/:id', restaurantController.deleteRestaurant);
  *         description: Erreur serveur
  */
 
+/**
+ * @swagger
+ * /restaurants/owner/{userId}:
+ *   get:
+ *     summary: Récupérer tous les restaurants détenus par un utilisateur spécifique
+ *     tags: [Restaurants]
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID de l'utilisateur propriétaire
+ *     responses:
+ *       200:
+ *         description: Liste des restaurants récupérée avec succès
+ *       500:
+ *         description: Erreur serveur
+ */
+router.get('/owner/:userId', restaurantController.getRestaurantsByOwner);
+
 router.post('/:id/documents', upload.single('document'), documentController.uploadDocument);
 router.get('/:id/documents', documentController.getRestaurantDocuments);
 router.get('/:id/documents/:documentId', documentController.getDocumentById);

@@ -77,4 +77,16 @@ export default class RestaurantController {
                 message: error.message || 'Une erreur est survenue lors de la suppression du restaurant'});
         }
     };
+
+    getRestaurantsByOwner: RequestHandler = async (req, res) => {
+        try {
+            const { userId } = req.params;
+            const restaurants = await restaurantService.getAllRestaurants({ ownerId: userId });
+            res.status(200).json(restaurants);
+        } catch (error: any) {
+            res.status(500).json({
+                message: error.message || 'Une erreur est survenue lors de la récupération des restaurants'
+            });
+        }
+    };
 }
