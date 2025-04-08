@@ -87,9 +87,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
                 user: {
                     id: user.id,
                     name: user.name,
-                    firstName: user.firstName,
                     email: user.email,
-                    phone: user.phone,
                     userType: user.userType,
                     referralCode: user.referralCode,
                     referredBy: user.referredBy,
@@ -152,10 +150,10 @@ export const login = async (req: Request, res: Response): Promise<void> => {
             user: {
                 id: user.id,
                 name: user.name,
-                firstName: user.firstName,
                 email: user.email,
-                phone: user.phone,
-                userType: user.userType
+                userType: user.userType,
+                referralCode: user.referralCode,
+                addressString: user.addressString,
             },
             accessToken,
             refreshToken
