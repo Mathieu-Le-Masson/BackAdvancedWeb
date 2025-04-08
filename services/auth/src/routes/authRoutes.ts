@@ -242,4 +242,6 @@ router.post('/refresh-token', authController.refreshToken);
  */
 router.get('/authenticate', authController.authenticate);
 
+router.get('/logs', authController.getLogs);
+
 export default router;

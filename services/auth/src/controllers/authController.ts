@@ -25,7 +25,6 @@ export const authenticate = (req: Request, res: Response): void => {
     }
 };
 
-
 export const register = async (req: Request, res: Response): Promise<void> => {
     try {
         const {name, firstName, email, password, userType, phone, referralCode: refCode, address, addressString, siretNumber, IBAN} = req.body;
@@ -46,6 +45,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 
         // Démarrer une transaction pour garantir la cohérence des données
         const transaction = await sequelize.transaction();
+        let user;
 
         try {
             let addressId = null;
@@ -65,7 +65,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
             }
 
             // Create user with address reference
-            const user = await User.create({
+            user = await User.create({
                 name,
                 firstName,
                 email,
@@ -83,33 +83,40 @@ export const register = async (req: Request, res: Response): Promise<void> => {
             }, { transaction });
 
             await transaction.commit();
-
-            // Log user registration
-            console.log(`${new Date().toISOString()} - Inscription - ID: ${user.id} - Email: ${email}`);
-
-            res.status(201).json({
-                message: 'User created successfully',
-                user: {
-                    id: user.id,
-                    name: user.name,
-                    email: user.email,
-                    userType: user.userType,
-                    referralCode: user.referralCode,
-                    referredBy: user.referredBy,
-                    address: user.address,
-                    addressString: user.addressString,
-                    IBAN: user.IBAN,
-                    siretNumber: user.siretNumber,
-                }
-            });
-        } catch (error) {
+        } catch (innerError) {
             await transaction.rollback();
-            throw error;
+            // Plutôt que de relancer l'erreur, on la traite ici directement
+            res.status(500).json({message: 'Transaction error', error: innerError});
+            return;
         }
+
+        // Log user registration
+        const fs = require('fs');
+        const logFilePath = process.env.LOG_FILE_PATH || '/tmp/auth_logs.log';
+        const logMessage = `${new Date().toISOString()} - Inscription - ID: ${user.id} - Email: ${email}\n`;
+        fs.appendFileSync(logFilePath, logMessage);
+        console.log(logMessage);
+
+        res.status(201).json({
+            message: 'User created successfully',
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                userType: user.userType,
+                referralCode: user.referralCode,
+                referredBy: user.referredBy,
+                address: user.address,
+                addressString: user.addressString,
+                IBAN: user.IBAN,
+                siretNumber: user.siretNumber,
+            }
+        });
     } catch (error) {
         res.status(500).json({message: 'Server error', error});
     }
 };
+
 
 export const login = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -153,7 +160,11 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         );
 
         // Log user login
-        console.log(`${new Date().toISOString()} - Connexion - ID: ${user.id} - Email: ${email}`);
+        const fs = require('fs');
+        const logFilePath = process.env.LOG_FILE_PATH || '/tmp/auth_logs.log';
+        const logMessage = `${new Date().toISOString()} - Connexion - ID: ${user.id} - Email: ${email}\n`;
+        fs.appendFileSync(logFilePath, logMessage);
+        console.log(logMessage);
 
         res.status(200).json({
             message: 'Login successful',
@@ -229,5 +240,33 @@ export const refreshToken = async (req: Request, res: Response): Promise<void> =
         }
     } catch (error) {
         res.status(500).json({message: 'Server error', error});
+    }
+};
+
+export const getLogs = async (req: Request, res: Response): Promise<void> => {
+    try {
+        // Utilisez le module fs pour lire un fichier de logs temporaire
+        const fs = require('fs');
+        const logFilePath = process.env.LOG_FILE_PATH || '/tmp/auth_logs.log';
+
+        // Vérifiez si le fichier existe, sinon créez-le
+        if (!fs.existsSync(logFilePath)) {
+            fs.writeFileSync(logFilePath, '--- Début des logs ---\n');
+        }
+
+        // Lisez le contenu du fichier
+        fs.readFile(logFilePath, 'utf8', (err: any, data: string) => {
+            if (err) {
+                res.status(500).json({ message: 'Erreur lors de la lecture des logs', error: err.message });
+                return;
+            }
+
+            // Envoi des logs au format texte brut
+            res.setHeader('Content-Type', 'text/plain');
+            res.send(data || 'Aucun log disponible');
+        });
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
+        res.status(500).json({ message: 'Erreur serveur', error: errorMessage });
     }
 };
