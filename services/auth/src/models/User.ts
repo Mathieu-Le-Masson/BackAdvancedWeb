@@ -5,18 +5,21 @@ import UserAddress from './UserAddress';
 class User extends Model {
     public id!: string;
     public name!: string;
-    public firstName!: string;
+    public firstName!: string | null;
     public email!: string;
-    public phone!: string;
+    public phone!: string | null;
     public addressString!: string | null;
-    public address!: UserAddress | null;
+    public address!: string | null;  // C'est l'UUID, pas l'objet UserAddress
     public password!: string;
     public userType!: string;
-    public referralCode!: string;
+    public referralCode!: string | null;
     public referredBy!: string | null;
     public isActive!: boolean;
     public siretNumber!: string | null;
     public IBAN!: string | null;
+
+    // Propriété virtuelle pour l'association
+    public addressDetails?: UserAddress | null;
 }
 
 User.init({
