@@ -12,7 +12,6 @@ export default class RestaurantService {
 
         try {
             let addressId = null;
-            let addressString = null;
 
             // Si une adresse est fournie, la créer d'abord
             if (restaurantData.address) {
@@ -26,7 +25,6 @@ export default class RestaurantService {
                 }, { transaction });
 
                 addressId = newAddress.id;
-                addressString = `${restaurantData.address.streetNumber} ${restaurantData.address.street}, ${restaurantData.address.postalCode} ${restaurantData.address.city}, ${restaurantData.address.country}`;
             }
 
             // Créer le restaurant avec la référence à l'adresse
@@ -41,7 +39,7 @@ export default class RestaurantService {
                 openingHours: restaurantData.openingHours,
                 ownerId: restaurantData.ownerId,
                 address: addressId,
-                addressString: addressString,
+                addressString: restaurantData.addressString,
                 isActive: restaurantData.isActive ?? true,
                 documentIds: []
             }, { transaction });
