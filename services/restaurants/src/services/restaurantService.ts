@@ -2,12 +2,54 @@ import {Op} from 'sequelize';
 import Restaurant from '../models/Restaurant';
 import RestaurantAddress from '../models/RestaurantAdress';
 import RestaurantDocument from '../models/RestaurantDocument';
+import sequelize from "../config/database";
 
 export default class RestaurantService {
+    // Méthode pour créer un restaurant avec son adresse
     async createRestaurant(restaurantData: any) {
+        // Démarrer une transaction pour garantir la cohérence des données
+        const transaction = await sequelize.transaction();
+
         try {
-            return await Restaurant.create(restaurantData);
+            let addressId = null;
+            let addressString = null;
+
+            // Si une adresse est fournie, la créer d'abord
+            if (restaurantData.address) {
+                const newAddress = await RestaurantAddress.create({
+                    streetNumber: restaurantData.address.streetNumber,
+                    street: restaurantData.address.street,
+                    complement: restaurantData.address.complement || null,
+                    postalCode: restaurantData.address.postalCode,
+                    city: restaurantData.address.city,
+                    country: restaurantData.address.country
+                }, { transaction });
+
+                addressId = newAddress.id;
+                addressString = `${restaurantData.address.streetNumber} ${restaurantData.address.street}, ${restaurantData.address.postalCode} ${restaurantData.address.city}, ${restaurantData.address.country}`;
+            }
+
+            // Créer le restaurant avec la référence à l'adresse
+            const restaurant = await Restaurant.create({
+                name: restaurantData.name,
+                phone: restaurantData.phone,
+                email: restaurantData.email,
+                description: restaurantData.description,
+                cuisine: restaurantData.cuisine,
+                priceRange: restaurantData.priceRange,
+                capacity: restaurantData.capacity,
+                openingHours: restaurantData.openingHours,
+                ownerId: restaurantData.ownerId,
+                address: addressId,
+                addressString: addressString,
+                isActive: restaurantData.isActive ?? true,
+                documentIds: []
+            }, { transaction });
+
+            await transaction.commit();
+            return restaurant;
         } catch (error) {
+            await transaction.rollback();
             throw new Error(`Erreur lors de la création du restaurant: ${error}`);
         }
     }

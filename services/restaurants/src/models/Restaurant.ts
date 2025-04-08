@@ -5,7 +5,8 @@ import RestaurantAddress from './RestaurantAdress';
 class Restaurant extends Model {
     public id!: string;
     public name!: string;
-    public addressId!: string | null;
+    public address!: RestaurantAddress | null;
+    public addressString!: string | null;
     public phone!: string;
     public email!: string;
     public description!: string;
@@ -30,13 +31,17 @@ Restaurant.init({
         type: DataTypes.STRING,
         allowNull: false,
     },
-    addressId: {
+    address: {
         type: DataTypes.UUID,
         allowNull: true,
         references: {
             model: RestaurantAddress,
             key: 'id'
         }
+    },
+    addressString: {
+        type: DataTypes.STRING,
+        allowNull: true,
     },
     phone: {
         type: DataTypes.STRING,
@@ -88,6 +93,6 @@ Restaurant.init({
 });
 
 // Associations
-Restaurant.belongsTo(RestaurantAddress, {foreignKey: 'addressId', as: 'address'});
+Restaurant.belongsTo(RestaurantAddress, {foreignKey: 'address', as: 'addressDetails'});
 
 export default Restaurant;

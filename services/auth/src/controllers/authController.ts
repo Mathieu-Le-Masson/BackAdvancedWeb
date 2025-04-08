@@ -28,7 +28,7 @@ export const authenticate = (req: Request, res: Response): void => {
 
 export const register = async (req: Request, res: Response): Promise<void> => {
     try {
-        const {name, firstName, email, password, userType, phone, refCode, address} = req.body;
+        const {name, firstName, email, password, userType, phone, refCode, address, addressString} = req.body;
 
         // Check if user already exists
         const existingUser = await User.findOne({where: {email}});
@@ -73,7 +73,8 @@ export const register = async (req: Request, res: Response): Promise<void> => {
                 userType,
                 referralCode,
                 phone,
-                addressId,
+                address: addressId,
+                addressString: addressString,
                 referredBy: refCode ?
                     (await User.findOne({where: {referralCode: refCode}}))?.id :
                     null
@@ -92,7 +93,8 @@ export const register = async (req: Request, res: Response): Promise<void> => {
                     userType: user.userType,
                     referralCode: user.referralCode,
                     referredBy: user.referredBy,
-                    addressId: user.addressId
+                    address: user.address,
+                    addressString: user.addressString,
                 }
             });
         } catch (error) {

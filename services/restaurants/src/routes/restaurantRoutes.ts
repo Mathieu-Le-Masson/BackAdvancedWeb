@@ -199,7 +199,7 @@ router.delete('/:id', restaurantController.deleteRestaurant);
  * /restaurants/{id}/documents:
  *   post:
  *     summary: Télécharger un document pour un restaurant
- *     tags: [Documents]
+ *     tags: [Restaurants]
  *     parameters:
  *       - in: path
  *         name: id
@@ -231,7 +231,7 @@ router.delete('/:id', restaurantController.deleteRestaurant);
  * /restaurants/{id}/documents:
  *   get:
  *     summary: Récupérer tous les documents d'un restaurant
- *     tags: [Documents]
+ *     tags: [Restaurants]
  *     parameters:
  *       - in: path
  *         name: id
@@ -253,7 +253,7 @@ router.delete('/:id', restaurantController.deleteRestaurant);
  * /restaurants/{id}/documents/{documentId}:
  *   get:
  *     summary: Récupérer un document par son ID
- *     tags: [Documents]
+ *     tags: [Restaurants]
  *     parameters:
  *       - in: path
  *         name: id
@@ -281,7 +281,7 @@ router.delete('/:id', restaurantController.deleteRestaurant);
  * /restaurants/{id}/documents/{documentId}:
  *   delete:
  *     summary: Supprimer un document par son ID
- *     tags: [Documents]
+ *     tags: [Restaurants]
  *     parameters:
  *       - in: path
  *         name: id

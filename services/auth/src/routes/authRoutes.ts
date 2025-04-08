@@ -54,6 +54,7 @@ const router = express.Router();
  *               type: string
  *             country:
  *               type: string
+ *
  *     LoginRequest:
  *       type: object
  *       required:
@@ -119,8 +120,9 @@ const router = express.Router();
  *                       type: string
  *                     referredBy:
  *                       type: string
- *                     addressId:
+ *                     address:
  *                       type: string
+ *
  *       400:
  *         description: Utilisateur déjà existant
  *       500:

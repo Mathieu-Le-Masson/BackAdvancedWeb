@@ -8,12 +8,15 @@ class User extends Model {
     public firstName!: string;
     public email!: string;
     public phone!: string;
-    public addressId!: string | null;
+    public addressString!: string | null;
+    public address!: UserAddress | null;
     public password!: string;
     public userType!: string;
     public referralCode!: string;
     public referredBy!: number | null;
     public isActive!: boolean;
+    public siretNumber!: string | null;
+    public IBAN!: string | null;
 }
 
 User.init({
@@ -41,7 +44,11 @@ User.init({
         allowNull: false,
         unique: true,
     },
-    addressId: {
+    addressString: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    address: {
         type: DataTypes.UUID,
         allowNull: true,
         references: {
@@ -75,6 +82,14 @@ User.init({
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: true,
+    },
+    siretNumber: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    IBAN: {
+        type: DataTypes.STRING,
+        allowNull: true,
     }
 }, {
     sequelize,
@@ -88,6 +103,6 @@ User.hasMany(User, {as: 'referrals', foreignKey: 'referredBy'});
 User.belongsTo(User, {as: 'referrer', foreignKey: 'referredBy'});
 
 // Relationship with UserAddress, several users can have the same address
-User.belongsTo(UserAddress, {foreignKey: 'addressId', as: 'address'});
+User.belongsTo(UserAddress, {foreignKey: 'address', as: 'addressDetails'});
 
 export default User;
