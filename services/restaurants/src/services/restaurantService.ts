@@ -87,7 +87,7 @@ export default class RestaurantService {
 
             const restaurants = await Restaurant.findAll({
                 where: whereClause,
-                include: [{ model: RestaurantAddress, as: 'address' }],
+                include: [{ model: RestaurantAddress, as: 'addressDetails' }],
                 order: [['name', 'ASC']]
             });
 
