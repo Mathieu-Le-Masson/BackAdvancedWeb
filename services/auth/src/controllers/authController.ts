@@ -28,7 +28,7 @@ export const authenticate = (req: Request, res: Response): void => {
 
 export const register = async (req: Request, res: Response): Promise<void> => {
     try {
-        const {name, firstName, email, password, userType, phone, refCode, address, addressString} = req.body;
+        const {name, firstName, email, password, userType, phone, referralCode: refCode, address, addressString} = req.body;
 
         // Check if user already exists
         const existingUser = await User.findOne({where: {email}});
