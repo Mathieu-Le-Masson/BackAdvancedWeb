@@ -13,7 +13,7 @@ class User extends Model {
     public password!: string;
     public userType!: string;
     public referralCode!: string;
-    public referredBy!: number | null;
+    public referredBy!: string | null;
     public isActive!: boolean;
     public siretNumber!: string | null;
     public IBAN!: string | null;
@@ -32,7 +32,7 @@ User.init({
     },
     firstName: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     email: {
         type: DataTypes.STRING,
@@ -41,7 +41,7 @@ User.init({
     },
     phone: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
         unique: true,
     },
     addressString: {
@@ -67,7 +67,7 @@ User.init({
     },
     referralCode: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
         unique: true,
     },
     referredBy: {
