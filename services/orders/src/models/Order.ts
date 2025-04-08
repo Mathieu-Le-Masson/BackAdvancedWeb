@@ -14,6 +14,9 @@ class Order extends Model {
     public totalAmount!: number;
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
+    public destination!: string;
+    public origin!: string;
+    public deliveryPrice!: number | null;
 }
 
 Order.init({
@@ -58,6 +61,18 @@ Order.init({
     totalAmount: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false
+    },
+    origin: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    destination: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    deliveryPrice: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: true
     }
 }, {
     sequelize,

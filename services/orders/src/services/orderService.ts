@@ -14,6 +14,30 @@ export default class OrderService {
 
     async createOrder(orderData: any) {
         try {
+            // Appel à l'API pour récupérer les données de route
+            const response = await fetch('http://localhost:8080/api/maps/route', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    origin: orderData.origin,
+                    destination: orderData.destination,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Erreur lors du calcul de l\'itinéraire. Vérifiez votre adresse.');
+            }
+
+            const routeData = await response.json();
+
+            // Ajout des données de route à orderData
+            orderData.distance = routeData.distance;
+            orderData.duration = routeData.duration;
+            orderData.deliveryPrice = 2.85 + (routeData.distance * 0.82);  // Prix de base + prix par km
+            orderData.totalAmount = orderData.totalAmount + orderData.deliveryPrice; // Prix total = prix de la commande + prix de livraison
+
             // Crée la commande
             const order = await Order.create(orderData);
 
