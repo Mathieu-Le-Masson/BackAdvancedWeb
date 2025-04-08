@@ -11,18 +11,43 @@ export default class DocumentController {
     uploadDocument = async (req: Request, res: Response): Promise<void> => {
         try {
             const restaurantId = req.params.id;
-            if (!req.file) {
+
+            // Vérifier si nous avons un fichier via multer ou des données base64 dans le body
+            let documentData;
+
+            if (req.file) {
+                // Cas d'un fichier envoyé via multipart/form-data
+                documentData = {
+                    name: req.file.originalname,
+                    buffer: req.file.buffer,
+                    mimetype: req.file.mimetype
+                };
+            } else if (req.body && req.body.file) {
+                // Cas des données en base64
+                const dataUrlRegex = /^data:([A-Za-z-+/]+);base64,(.+)$/;
+                const matches = req.body.file.match(dataUrlRegex);
+
+                if (!matches || matches.length !== 3) {
+                    res.status(400).json({ message: 'Format de données invalide' });
+                    return;
+                }
+
+                const mimetype = matches[1];
+                const buffer = Buffer.from(matches[2], 'base64');
+
+                documentData = {
+                    name: req.body.name || 'document',
+                    buffer: buffer,
+                    mimetype: mimetype
+                };
+            } else {
                 res.status(400).json({ message: 'Aucun document fourni' });
                 return;
             }
 
             const result = await this.restaurantService.saveRestaurantDocument(
                 restaurantId,
-                {
-                    name: req.file.originalname,
-                    buffer: req.file.buffer,
-                    mimetype: req.file.mimetype
-                }
+                documentData
             );
 
             res.status(201).json({
