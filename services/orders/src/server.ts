@@ -4,6 +4,7 @@ import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import sequelize, { createDatabaseIfNotExists } from './config/database';
 import swaggerSpec from './config/swagger';
+import orderRoutes from './routes/orderRoutes';
 
 dotenv.config();
 
@@ -17,6 +18,8 @@ app.use(cors({
 }));
 
 app.use(express.json());
+
+app.use('/api/orders', orderRoutes);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 

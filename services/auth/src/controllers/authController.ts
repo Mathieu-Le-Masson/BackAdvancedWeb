@@ -28,7 +28,7 @@ export const authenticate = (req: Request, res: Response): void => {
 
 export const register = async (req: Request, res: Response): Promise<void> => {
     try {
-        const {name, firstName, email, password, userType, phone, referralCode: refCode, address, addressString} = req.body;
+        const {name, firstName, email, password, userType, phone, referralCode: refCode, address, addressString, siretNumber, IBAN} = req.body;
 
         // Check if user already exists
         const existingUser = await User.findOne({where: {email}});
@@ -75,12 +75,17 @@ export const register = async (req: Request, res: Response): Promise<void> => {
                 phone,
                 address: addressId,
                 addressString: addressString,
+                IBAN: IBAN,
+                siretNumber: siretNumber,
                 referredBy: refCode ?
                     (await User.findOne({where: {referralCode: refCode}}))?.id :
                     null
             }, { transaction });
 
             await transaction.commit();
+
+            // Log user registration
+            console.log(`${new Date().toISOString()} - Inscription - ID: ${user.id} - Email: ${email}`);
 
             res.status(201).json({
                 message: 'User created successfully',
@@ -93,6 +98,8 @@ export const register = async (req: Request, res: Response): Promise<void> => {
                     referredBy: user.referredBy,
                     address: user.address,
                     addressString: user.addressString,
+                    IBAN: user.IBAN,
+                    siretNumber: user.siretNumber,
                 }
             });
         } catch (error) {
@@ -132,7 +139,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         const accessToken = jwt.sign(
             {
                 userId: user.id,
-                email: user.email,  // Add email to match your type definition
+                email: user.email,
                 userType: user.userType
             },
             process.env.JWT_SECRET || 'your-secret-key',
@@ -145,6 +152,9 @@ export const login = async (req: Request, res: Response): Promise<void> => {
             {expiresIn: '7d'}
         );
 
+        // Log user login
+        console.log(`${new Date().toISOString()} - Connexion - ID: ${user.id} - Email: ${email}`);
+
         res.status(200).json({
             message: 'Login successful',
             user: {
@@ -154,6 +164,8 @@ export const login = async (req: Request, res: Response): Promise<void> => {
                 userType: user.userType,
                 referralCode: user.referralCode,
                 addressString: user.addressString,
+                IBAN: user.IBAN,
+                siretNumber: user.siretNumber,
             },
             accessToken,
             refreshToken
