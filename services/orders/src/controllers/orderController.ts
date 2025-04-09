@@ -38,6 +38,8 @@ export default class OrderController {
     };
 
     createOrder = async (req: Request, res: Response): Promise<void> => {
+        console.log('ici222222222');
+
         try {
             console.log('ici2');
             const orderData = req.body;

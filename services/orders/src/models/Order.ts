@@ -5,15 +5,15 @@ class Order extends Model {
     public id!: number;
     public orderNumber!: number;
     public clientId!: string;
-    public price!: number | null;
+    public price!: number;
     public distance!: number | null;
     public duration!: number | null;
     public delivererId!: string | null;
     public deliveryId!: string | null;
     public status!: 'pending' | 'preparing' | 'ready' | 'delivering' | 'delivered' | 'cancelled';
-    public totalAmount!: number;
+    public totalAmount!: number | null;
     public readonly createdAt!: Date;
-    public readonly updatedAt!: Date;
+    public readonly updatedAt!: Date | null;
     public destination!: string;
     public origin!: string;
     public deliveryPrice!: number | null;
@@ -35,7 +35,7 @@ Order.init({
     },
     price: {
         type: DataTypes.DECIMAL(10, 2),
-        allowNull: true
+        allowNull: false
     },
     distance: {
         type: DataTypes.DECIMAL(10, 2),
@@ -58,9 +58,18 @@ Order.init({
         allowNull: false,
         defaultValue: 'pending'
     },
+    createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW
+    },
+    updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+    },
     totalAmount: {
         type: DataTypes.DECIMAL(10, 2),
-        allowNull: false
+        allowNull: true
     },
     origin: {
         type: DataTypes.STRING,
@@ -72,6 +81,10 @@ Order.init({
     },
     deliveryPrice: {
         type: DataTypes.DECIMAL(10, 2),
+        allowNull: true
+    },
+    token: {
+        type: DataTypes.STRING,
         allowNull: true
     }
 }, {
