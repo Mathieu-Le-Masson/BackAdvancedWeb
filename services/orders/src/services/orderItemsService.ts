@@ -4,35 +4,20 @@ const createOrderItem = async (data: any) => {
   return await OrderItemsModels.create(data);
 };
 
-const getOrderItemsById = async (id: number) => {
-  return await OrderItemsModels.findByPk(id);
-};
-
 const getOrderItemsByOrderId = async (orderId: number) => {
   return await OrderItemsModels.findAll({ where: { orderId } });
 };
 
-const updateOrderItem = async (id: number, data: any) => {
-  const orderItem = await OrderItemsModels.findByPk(id);
-  if (!orderItem) {
-    throw new Error('Order item not found');
+const deleteOrderItemsByOrderId = async (orderId: number) => {
+  const orderItems = await OrderItemsModels.findAll({ where: { orderId } });
+  if (!orderItems || orderItems.length === 0) {
+    throw new Error('No order items found for the given order ID');
   }
-  return await orderItem.update(data);
-};
-
-const deleteOrderItem = async (id: number) => {
-  const orderItem = await OrderItemsModels.findByPk(id);
-  if (!orderItem) {
-    throw new Error('Order item not found');
-  }
-  await orderItem.destroy();
+  await OrderItemsModels.destroy({ where: { orderId } });
 };
 
 export default {
   createOrderItem,
-  getOrderItemsById,
   getOrderItemsByOrderId,
-  updateOrderItem,
-  deleteOrderItem,
+  deleteOrderItemsByOrderId,
 };
-

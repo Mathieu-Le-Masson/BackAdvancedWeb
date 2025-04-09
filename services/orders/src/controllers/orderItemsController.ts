@@ -25,25 +25,13 @@ export const getOrderItemsByOrderId = async (req: Request, res: Response) => {
   }
 };
 
-export const updateOrderItem = async (req: Request, res: Response) => {
+export const deleteOrderItemsByOrderId = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
-    const updatedOrderItem = await orderItemsService.updateOrderItem(Number(id), req.body);
-    res.status(200).json(updatedOrderItem);
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Une erreur inconnue est survenue.';
-    res.status(500).json({ error: errorMessage });
-  }
-};
-
-export const deleteOrderItem = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    await orderItemsService.deleteOrderItem(Number(id));
+    const { orderId } = req.params;
+    await orderItemsService.deleteOrderItemsByOrderId(Number(orderId));
     res.status(204).send();
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Une erreur inconnue est survenue.';
     res.status(500).json({ error: errorMessage });
   }
 };
-
