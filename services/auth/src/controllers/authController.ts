@@ -270,3 +270,56 @@ export const getLogs = async (req: Request, res: Response): Promise<void> => {
         res.status(500).json({ message: 'Erreur serveur', error: errorMessage });
     }
 };
+
+export const logGithubAccess = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { userName } = req.body;
+
+        if (!userName) {
+            res.status(400).json({ message: 'Le nom d\'utilisateur est requis' });
+            return;
+        }
+
+        // Écriture dans le fichier de logs
+        const fs = require('fs');
+        const logFilePath = process.env.GITHUB_LOG_FILE_PATH || '/tmp/github_access_logs.log';
+        const logMessage = `${new Date().toISOString()} - Accès GitHub - User: ${userName}\n`;
+
+        fs.appendFileSync(logFilePath, logMessage);
+        console.log(logMessage);
+
+        res.status(200).json({ message: 'Accès au repository GitHub enregistré avec succès' });
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
+        res.status(500).json({ message: 'Erreur lors de l\'enregistrement de l\'accès GitHub', error: errorMessage });
+    }
+};
+
+export const getGithubLogs = async (req: Request, res: Response): Promise<void> => {
+    try {
+        // Utilisation du module fs pour lire le fichier de logs GitHub
+        const fs = require('fs');
+        const logFilePath = process.env.GITHUB_LOG_FILE_PATH || '/tmp/github_access_logs.log';
+
+        // Vérifier si le fichier existe, sinon le créer
+        if (!fs.existsSync(logFilePath)) {
+            fs.writeFileSync(logFilePath, '--- Début des logs d\'accès GitHub ---\n');
+        }
+
+        // Lire le contenu du fichier
+        fs.readFile(logFilePath, 'utf8', (err: any, data: string) => {
+            if (err) {
+                res.status(500).json({ message: 'Erreur lors de la lecture des logs GitHub', error: err.message });
+                return;
+            }
+
+            // Envoi des logs au format texte brut avec en-tête pour téléchargement
+            res.setHeader('Content-Type', 'text/plain');
+            res.setHeader('Content-Disposition', 'attachment; filename="github_access_logs.log"');
+            res.send(data || 'Aucun log d\'accès GitHub disponible');
+        });
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
+        res.status(500).json({ message: 'Erreur serveur', error: errorMessage });
+    }
+};

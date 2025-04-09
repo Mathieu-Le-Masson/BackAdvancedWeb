@@ -242,6 +242,11 @@ router.post('/refresh-token', authController.refreshToken);
  */
 router.get('/authenticate', authController.authenticate);
 
+
 router.get('/logs', authController.getLogs);
+
+router.post('/log-component-download', authController.logGithubAccess);
+
+router.get('/get-component-log', authController.getGithubLogs);
 
 export default router;
