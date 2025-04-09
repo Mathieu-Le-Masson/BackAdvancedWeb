@@ -5,6 +5,7 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swagger';
 import authRoutes from './routes/authRoutes';
 import usersRoutes from './routes/usersRoutes';
+import healthRoutes from './routes/healthRoutes';
 import sequelize, { createDatabaseIfNotExists } from './config/database';
 import { initAdminUser } from './utils/initAdmin';
 
@@ -22,6 +23,7 @@ app.use(cors({
 app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/users', usersRoutes);
+app.use('/api/auth-health', healthRoutes);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 

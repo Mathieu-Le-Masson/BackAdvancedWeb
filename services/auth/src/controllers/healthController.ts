@@ -20,7 +20,7 @@ export const getHealthStatus = async (req: Request, res: Response) => {
         const healthData = {
             status: 'up',
             timestamp: new Date().toISOString(),
-            service: 'restaurant-service',
+            service: 'auth-service',
             checks: {
                 database: dbStatus,
             },
@@ -54,7 +54,7 @@ export const getHealthStatus = async (req: Request, res: Response) => {
         res.status(500).json({
             status: 'down',
             timestamp: new Date().toISOString(),
-            service: 'restaurant-service',
+            service: 'auth-service',
             error: error instanceof Error ? error.message : 'Unknown error',
         });
     }

@@ -22,6 +22,7 @@ app.use(cors({
 }));
 
 app.use(express.json());
+
 app.use('/api/restaurants', restaurantRoutes);
 app.use('/api/menus', menuRoutes);
 app.use('/api/articles', articleRoutes);
