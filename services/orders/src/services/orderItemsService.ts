@@ -1,15 +1,15 @@
-import MenusArticlesOrders from '../models/MenusArticlesOrders';
+import OrderItemsModels from '../models/orderItemsModels';
 
 const createOrderItem = async (data: any) => {
-  return await MenusArticlesOrders.create(data);
+  return await OrderItemsModels.create(data);
 };
 
 const getOrderItems = async () => {
-  return await MenusArticlesOrders.findAll();
+  return await OrderItemsModels.findAll();
 };
 
 const updateOrderItem = async (id: number, data: any) => {
-  const orderItem = await MenusArticlesOrders.findByPk(id);
+  const orderItem = await OrderItemsModels.findByPk(id);
   if (!orderItem) {
     throw new Error('Order item not found');
   }
@@ -17,7 +17,7 @@ const updateOrderItem = async (id: number, data: any) => {
 };
 
 const deleteOrderItem = async (id: number) => {
-  const orderItem = await MenusArticlesOrders.findByPk(id);
+  const orderItem = await OrderItemsModels.findByPk(id);
   if (!orderItem) {
     throw new Error('Order item not found');
   }

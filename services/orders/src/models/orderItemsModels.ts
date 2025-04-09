@@ -1,7 +1,7 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/database';
 
-class MenusArticlesOrders extends Model {
+class OrderItemsModels extends Model {
   public id!: number;
   public orderId!: number;
   public articleId!: number | null; // Peut être null si pas d'article commandé
@@ -9,7 +9,7 @@ class MenusArticlesOrders extends Model {
   public quantity!: number;
 }
 
-MenusArticlesOrders.init(
+OrderItemsModels.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -36,10 +36,10 @@ MenusArticlesOrders.init(
   },
   {
     sequelize,
-    modelName: 'MenusArticlesOrders',
+    modelName: 'OrderItemsModels',
     tableName: 'menus_articles_orders', // Nom de la table dans la base de données
     timestamps: false, // Désactive les colonnes createdAt et updatedAt
   }
 );
 
-export default MenusArticlesOrders;
+export default OrderItemsModels;
