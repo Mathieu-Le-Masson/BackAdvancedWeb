@@ -4,8 +4,12 @@ const createOrderItem = async (data: any) => {
   return await OrderItemsModels.create(data);
 };
 
-const getOrderItems = async () => {
-  return await OrderItemsModels.findAll();
+const getOrderItemsById = async (id: number) => {
+  return await OrderItemsModels.findByPk(id);
+};
+
+const getOrderItemsByOrderId = async (orderId: number) => {
+  return await OrderItemsModels.findAll({ where: { orderId } });
 };
 
 const updateOrderItem = async (id: number, data: any) => {
@@ -26,7 +30,9 @@ const deleteOrderItem = async (id: number) => {
 
 export default {
   createOrderItem,
-  getOrderItems,
+  getOrderItemsById,
+  getOrderItemsByOrderId,
   updateOrderItem,
   deleteOrderItem,
 };
+

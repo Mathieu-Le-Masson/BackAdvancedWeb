@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import {
   createOrderItem,
-  getOrderItems,
+  getOrderItemsByOrderId,
   updateOrderItem,
   deleteOrderItem,
 } from '../controllers/orderItemsController';
@@ -9,7 +9,8 @@ import {
 const router = Router();
 
 router.post('/', createOrderItem);
-router.get('/', getOrderItems);
+// @ts-ignore
+router.get('/:orderId', getOrderItemsByOrderId); // Mise à jour pour récupérer par orderId
 router.put('/:id', updateOrderItem);
 router.delete('/:id', deleteOrderItem);
 
