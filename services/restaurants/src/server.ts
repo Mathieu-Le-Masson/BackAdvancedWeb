@@ -7,6 +7,7 @@ import connectMongoDB from './config/mongodb';
 import restaurantRoutes from "./routes/restaurantRoutes";
 import menuRoutes from "./routes/menuRoutes";
 import articleRoutes from "./routes/articleRoutes";
+import healthRoutes from "./routes/healthRoutes";
 import swaggerSpec from './config/swagger';
 
 dotenv.config();
@@ -24,6 +25,7 @@ app.use(express.json());
 app.use('/api/restaurants', restaurantRoutes);
 app.use('/api/menus', menuRoutes);
 app.use('/api/articles', articleRoutes);
+app.use('/api/restaurant-health', healthRoutes);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 

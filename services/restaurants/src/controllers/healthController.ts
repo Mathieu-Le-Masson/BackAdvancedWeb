@@ -3,6 +3,7 @@ import os from 'os';
 import sequelize  from "../config/database";
 
 export const getHealthStatus = async (req: Request, res: Response) => {
+    console.log("Health check endpoint hit");
     try {
         // Vérification de la connexion à la base de données
         await sequelize.authenticate();
