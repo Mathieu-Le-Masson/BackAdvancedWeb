@@ -12,6 +12,7 @@ services:
       - auth-service
       - restaurant-service
       - maps-service
+      - orders-service
 
   auth-service:
     build: ./services/auth
@@ -52,6 +53,22 @@ services:
       - postgres
     ports:
       - "3003:3000"    # For swagger UI
+
+
+    #Orders service
+  orders-service:
+    build: ./services/orders
+    container_name: orders-service
+    volumes:
+      - ./services/orders:/app
+      - node_modules_orders:/app/node_modules
+    networks:
+        - app-network
+    depends_on:
+        - postgres
+    ports:
+        - "3004:3000"    # For swagger UI
+
 
 
   postgres:
@@ -117,7 +134,9 @@ volumes:
   node_modules_auth:
   node_modules_restaurants:
   node_modules_Delivery:
+  node_modules_orders:
   mongodb-data:
+
 
 networks:
   app-network:

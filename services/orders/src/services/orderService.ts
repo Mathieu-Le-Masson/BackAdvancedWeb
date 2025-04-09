@@ -9,14 +9,18 @@ export default class OrderService {
     }
 
     async getOrderById(id: number) {
+        console.log('ici9');
         return await Order.findByPk(id);
     }
 
     async createOrder(orderData: any) {
         try {
+            orderData.deliveryPrice = 4; // Prix de livraison par défaut
+            orderData.totalAmount = orderData.price + orderData.deliveryPrice; // Prix total = prix de la commande + prix de livraison
+            console.log('ici7');
             // Crée la commande
             const order = await Order.create(orderData);
-
+            console.log('ici8');
             // Retourne la commande créée
             return await this.getOrderById(order.id);
         } catch (error) {
