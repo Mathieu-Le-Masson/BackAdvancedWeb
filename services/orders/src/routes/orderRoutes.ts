@@ -5,12 +5,14 @@ import OrderController from '../controllers/orderController';
 const router = Router();
 const orderController = new OrderController();
 
-router.get('/orders', orderController.getOrders);
-router.get('/orders/:id', orderController.getOrderById);
-router.post('/orders', orderController.createOrder);
-router.put('/orders/:id', orderController.updateOrder);
-router.patch('/orders/:id/status', orderController.updateOrderStatus);
-router.patch('/orders/:id/delivery', orderController.updateDeliveryInfo);
-router.delete('/orders/:id', orderController.deleteOrder);
+router.get('/', orderController.getOrders);
+router.get('/:id', orderController.getOrderById);
+console.log('ici1');
+router.post('/', orderController.createOrder);
+console.log('ici16');
+router.put('/:id', orderController.updateOrder);
+router.patch('/:id/status', orderController.updateOrderStatus);
+router.patch('/:id/delivery', orderController.updateDeliveryInfo);
+router.delete('/:id', orderController.deleteOrder);
 
 export default router;
