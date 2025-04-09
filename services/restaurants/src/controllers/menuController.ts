@@ -33,6 +33,17 @@ export default class MenuController {
         }
     };
 
+    getMenusByRestaurantId = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const restaurantId = req.params.restaurantId;
+            const menus = await this.menuService.findByRestaurantId(restaurantId);
+            res.status(200).json(menus);
+        } catch (error) {
+            console.error('Erreur lors de la récupération des menus par restaurant:', error);
+            res.status(500).json({ message: 'Erreur serveur' });
+        }
+    };
+
     createMenu = async (req: Request, res: Response): Promise<void> => {
         try {
             const newMenu = await this.menuService.create(req.body);

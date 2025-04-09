@@ -282,4 +282,6 @@ router.get('/:id/images/:imageId', articleController.getArticleImage);
  */
 router.delete('/:id/images/:imageId', articleController.deleteArticleImage);
 
+router.get('/restaurant/:restaurantId', articleController.getArticlesByRestaurantId);
+
 export default router;

@@ -23,6 +23,17 @@ export default class ArticleService {
         }
     }
 
+    async findByRestaurantId(restaurantId: string) {
+        try {
+            return await Article.findAll({
+                where: {restaurantId: restaurantId}
+            });
+        } catch (error) {
+            console.error('Erreur lors de la recherche des articles par restaurant:', error);
+            throw error;
+        }
+    }
+
     async create(articleData: any) {
         try {
             return await Article.create(articleData);

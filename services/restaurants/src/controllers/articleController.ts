@@ -32,6 +32,17 @@ export default class ArticleController {
         }
     };
 
+    getArticlesByRestaurantId = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const restaurantId = req.params.restaurantId;
+            const articles = await this.articleService.findByRestaurantId(restaurantId);
+            res.status(200).json(articles);
+        } catch (error) {
+            console.error('Erreur lors de la récupération des articles par restaurant:', error);
+            res.status(500).json({ message: 'Erreur serveur' });
+        }
+    };
+
     createArticle = async (req: Request, res: Response): Promise<void> => {
         try {
             const newArticle = await this.articleService.create(req.body);

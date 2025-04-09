@@ -28,6 +28,17 @@ export default class MenuService {
         }
     }
 
+    async findByRestaurantId(restaurantId: string) {
+        try {
+            return await Menu.findAll({
+                where: {restaurantId: restaurantId}
+            });
+        } catch (error) {
+            console.error('Erreur lors de la recherche des menus par restaurant:', error);
+            throw error;
+        }
+    }
+
     async create(menuData: any) {
         try {
             return await Menu.create(menuData);

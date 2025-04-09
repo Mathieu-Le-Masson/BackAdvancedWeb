@@ -169,4 +169,6 @@ router.get('/:id/images/:imageId', menuController.getMenuImage);
  */
 router.delete('/:id/images/:imageId', menuController.deleteMenuImage);
 
+router.get('/restaurant/:restaurantId', menuController.getMenusByRestaurantId);
+
 export default router;
