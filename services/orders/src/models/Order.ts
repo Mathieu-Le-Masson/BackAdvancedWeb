@@ -83,10 +83,6 @@ Order.init({
         type: DataTypes.DECIMAL(10, 2),
         allowNull: true
     },
-    token: {
-        type: DataTypes.STRING,
-        allowNull: true
-    }
 }, {
     sequelize,
     tableName: 'orders',
