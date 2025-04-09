@@ -1,11 +1,16 @@
-import express from 'express';
-import { getArticlesAndMenus, getArticlesByRestaurant, getMenusByRestaurant, getOrderId } from '../controllers/orderItemsController';
+import { Router } from 'express';
+import {
+  createOrderItem,
+  getOrderItems,
+  updateOrderItem,
+  deleteOrderItem,
+} from '../controllers/orderItemsController';
 
-const router = express.Router();
+const router = Router();
 
-router.get('/orderItems', getArticlesAndMenus);
-router.get('/menus/:menuId/articles', getArticlesByRestaurant);
-router.get('/restaurants/:restaurantId/menus', getMenusByRestaurant);
-router.get('/orders/:orderId', getOrderId);
+router.post('/', createOrderItem);
+router.get('/', getOrderItems);
+router.put('/:id', updateOrderItem);
+router.delete('/:id', deleteOrderItem);
 
 export default router;

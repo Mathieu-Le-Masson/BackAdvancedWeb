@@ -1,47 +1,44 @@
 import { Request, Response } from 'express';
-import OrderItemsService from '../services/orderItemsService';
+    import orderItemsService from '../services/orderItemsService';
 
-const orderItems = new OrderItemsService();
+    export const createOrderItem = async (req: Request, res: Response) => {
+      try {
+        const orderItem = await orderItemsService.createOrderItem(req.body);
+        res.status(201).json(orderItem);
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Une erreur inconnue est survenue.';
+        res.status(500).json({ error: errorMessage });
+      }
+    };
 
-export const getArticlesAndMenus = async (req: Request, res: Response): Promise<void> => {
-    try {
-        const data = await orderItems.getArticlesAndMenus();
-        res.status(200).json(data);
-    } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
-        res.status(500).json({ message: 'Erreur lors de la récupération des données combinées', error: errorMessage });
-    }
-};
+    export const getOrderItems = async (req: Request, res: Response) => {
+      try {
+        const orderItems = await orderItemsService.getOrderItems();
+        res.status(200).json(orderItems);
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Une erreur inconnue est survenue.';
+        res.status(500).json({ error: errorMessage });
+      }
+    };
 
-export const getArticlesByRestaurant = async (req: Request, res: Response): Promise<void> => {
-    try {
-        const menuId = req.params.menuId;
-        const articles = await orderItems.getArticlesByRestaurant(menuId);
-        res.status(200).json(articles);
-    } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
-        res.status(500).json({ message: 'Erreur lors de la récupération des articles pour le menu', error: errorMessage });
-    }
-};
+    export const updateOrderItem = async (req: Request, res: Response) => {
+      try {
+        const { id } = req.params;
+        const updatedOrderItem = await orderItemsService.updateOrderItem(Number(id), req.body);
+        res.status(200).json(updatedOrderItem);
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Une erreur inconnue est survenue.';
+        res.status(500).json({ error: errorMessage });
+      }
+    };
 
-export const getMenusByRestaurant = async (req: Request, res: Response): Promise<void> => {
-    try {
-        const restaurantId = req.params.restaurantId;
-        const menus = await orderItems.getMenusByRestaurant(restaurantId);
-        res.status(200).json(menus);
-    } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
-        res.status(500).json({ message: 'Erreur lors de la récupération des menus pour le restaurant', error: errorMessage });
-    }
-};
-
-export const getOrderId = async (req: Request, res: Response): Promise<void> => {
-    try {
-        const orderId = req.params.orderId;
-        const order = await orderItems.getOrderId(orderId);
-        res.status(200).json(order);
-    } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
-        res.status(500).json({ message: 'Erreur lors de la récupération de la commande', error: errorMessage });
-    }
-}
+    export const deleteOrderItem = async (req: Request, res: Response) => {
+      try {
+        const { id } = req.params;
+        await orderItemsService.deleteOrderItem(Number(id));
+        res.status(204).send();
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Une erreur inconnue est survenue.';
+        res.status(500).json({ error: errorMessage });
+      }
+    };
