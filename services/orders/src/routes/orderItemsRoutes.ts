@@ -9,8 +9,9 @@ const router = Router();
 
 router.post('/', createOrderItem);
 // @ts-ignore
-router.get('/:orderId', getOrderItemsByOrderId); // Mise à jour pour récupérer par orderId
-router.delete('/:orderId', deleteOrderItemsByOrderId); // Mise à jour pour supprimer par orderId
+router.get('/:orderId', getOrderItemsByOrderId);
+router.get('/')
+router.delete('/:orderId', deleteOrderItemsByOrderId);
 
 export default router;
 
