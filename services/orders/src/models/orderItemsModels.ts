@@ -4,8 +4,8 @@ import sequelize from '../config/database';
 class OrderItemsModels extends Model {
   public id!: number;
   public orderId!: number;
-  public articleId!: number | null; // Peut être null si pas d'article commandé
-  public menuId!: number | null; // Peut être null si pas de menu commandé
+  public articleId!: string | null; // Peut être null si pas d'article commandé
+  public menuId!: string | null; // Peut être null si pas de menu commandé
   public quantity!: number;
 }
 
@@ -21,11 +21,11 @@ OrderItemsModels.init(
       allowNull: false,
     },
     articleId: {
-      type: DataTypes.INTEGER,
-      allowNull: true, // Null si pas d'article commandé
+        type: DataTypes.UUID,
+        allowNull: true, // Null si pas d'article commandé
     },
     menuId: {
-      type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
       allowNull: true, // Null si pas de menu commandé
     },
     quantity: {
