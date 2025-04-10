@@ -102,6 +102,25 @@ export default router;
  *       500:
  *         description: Erreur serveur
  *
+ *   post:
+ *     summary: Crée une nouvelle commande
+ *     tags: [Orders]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Order'
+ *     responses:
+ *       201:
+ *         description: Commande créée avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Order'
+ *       500:
+ *         description: Erreur serveur
+ *
  * /orders/{id}:
  *   get:
  *     summary: Récupère une commande par son ID
@@ -168,26 +187,6 @@ export default router;
  *         description: Commande supprimée avec succès
  *       404:
  *         description: Commande non trouvée
- *       500:
- *         description: Erreur serveur
- *
- * /orders:
- *   post:
- *     summary: Crée une nouvelle commande
- *     tags: [Orders]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Order'
- *     responses:
- *       201:
- *         description: Commande créée avec succès
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Order'
  *       500:
  *         description: Erreur serveur
  *
