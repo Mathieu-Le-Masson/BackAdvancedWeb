@@ -10,7 +10,7 @@ class Order extends Model {
     public duration!: number | null;
     public delivererId!: string | null;
     public deliveryId!: string | null;
-    public status!: 'pending' | 'preparing' | 'ready' | 'delivering' | 'delivered' | 'cancelled';
+    public status!: 'panier' | 'pending' | 'preparing' | 'ready' | 'delivering' | 'delivered' | 'cancelled';
     public totalAmount!: number | null;
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date | null;
