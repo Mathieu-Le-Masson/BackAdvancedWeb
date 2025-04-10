@@ -3,7 +3,6 @@ import sequelize from '../config/database';
 
 class Order extends Model {
     public id!: number;
-    public orderNumber!: number;
     public clientId!: string;
     public restaurantId!: string;
     public price!: number | null;
@@ -25,10 +24,6 @@ Order.init({
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true
-    },
-    orderNumber: {
-        type: DataTypes.INTEGER,
-        allowNull: false
     },
     clientId: {
         type: DataTypes.UUID,
@@ -90,17 +85,8 @@ Order.init({
     },
 }, {
     sequelize,
+    modelName: 'Order',
     tableName: 'orders',
-    hooks: {
-        beforeCreate: async (order: Order) => {
-            // Récupère le dernier numéro de commande et incrémente
-            const lastOrder = await Order.findOne({
-                order: [['orderNumber', 'DESC']]
-            });
-
-            order.orderNumber = lastOrder ? lastOrder.orderNumber + 1 : 1;
-        }
-    }
 });
 
 export default Order;

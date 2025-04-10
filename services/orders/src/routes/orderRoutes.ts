@@ -27,9 +27,6 @@ export default router;
  *         id:
  *           type: integer
  *           description: ID unique de la commande
- *         orderNumber:
- *           type: integer
- *           description: Numéro de la commande
  *         clientId:
  *           type: string
  *           description: ID du client ayant passé la commande
