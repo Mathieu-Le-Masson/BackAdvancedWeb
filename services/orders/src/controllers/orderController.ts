@@ -89,20 +89,13 @@ export default class OrderController {
     }
 
     createOrder = async (req: Request, res: Response): Promise<void> => {
-        console.log('ici222222222');
-
         try {
-            console.log('ici2');
-            const orderData = req.body;
+            const { id, ...orderData } = req.body; // Exclure l'ID des données reçues
             const order = await this.orderService.createOrder(orderData);
-            console.log('ici12');
             res.status(201).json(order);
         } catch (error: unknown) {
-            console.log('ici13');
             const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
-            console.log('ici14');
             res.status(500).json({ message: 'Erreur lors de la création de la commande', error: errorMessage });
-            console.log('ici15');
         }
     };
 
