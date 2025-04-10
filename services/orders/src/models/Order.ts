@@ -5,6 +5,7 @@ class Order extends Model {
     public id!: number;
     public orderNumber!: number;
     public clientId!: string;
+    public restaurantId!: string | null;
     public price!: number;
     public distance!: number | null;
     public duration!: number | null;
@@ -33,6 +34,10 @@ Order.init({
         type: DataTypes.UUID,
         allowNull: false
     },
+    restaurantId: {
+        type: DataTypes.UUID,
+        allowNull: true
+    },
     price: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false
@@ -54,7 +59,7 @@ Order.init({
         allowNull: true
     },
     status: {
-        type: DataTypes.ENUM('pending', 'preparing', 'ready', 'delivering', 'delivered', 'cancelled'),
+        type: DataTypes.ENUM('panier','pending', 'preparing', 'ready', 'delivering', 'delivered', 'cancelled'),
         allowNull: false,
         defaultValue: 'pending'
     },

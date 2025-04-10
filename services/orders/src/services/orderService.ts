@@ -13,6 +13,13 @@ export default class OrderService {
         return await Order.findByPk(id);
     }
 
+    async getOrderByClientId(clientId: number) {
+        return await Order.findAll({
+            where: { clientId },
+            order: [['createdAt', 'DESC']]
+        });
+    }
+
     async createOrder(orderData: any) {
         try {
             orderData.deliveryPrice = 4; // Prix de livraison par défaut
