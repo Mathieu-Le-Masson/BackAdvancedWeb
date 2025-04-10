@@ -18,10 +18,11 @@ const port = process.env.PORT || 3000;
 app.use(cors({
     origin: 'http://localhost:5173', // Adapté à votre frontend
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'] // Autorise les en-têtes personnalisés
 }));
 
-app.use(express.json());
+app.use(express.json({ limit: '500mb' })); // Augmenter la taille limite du corps de la requête
 
 app.use('/api/restaurants', restaurantRoutes);
 app.use('/api/menus', menuRoutes);
