@@ -54,9 +54,9 @@ Order.init({
         allowNull: true
     },
     status: {
-        type: DataTypes.ENUM('panier','pending', 'preparing', 'ready', 'delivering', 'delivered', 'cancelled'),
+        type: DataTypes.ENUM('Panier','En attente', 'En cours de préparation', 'Prête', 'En livraison', 'Livrée', 'Annulée'),
         allowNull: false,
-        defaultValue: 'panier'
+        defaultValue: 'Panier'
     },
     createdAt: {
         type: DataTypes.DATE,
