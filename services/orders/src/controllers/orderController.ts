@@ -39,7 +39,7 @@ export default class OrderController {
 
     getOrderByClientId = async (req: Request, res: Response): Promise<void> => {
         try {
-            const clientId = parseInt(req.params.clientId, 10);
+            const clientId = req.params.clientId;
             const order = await this.orderService.getOrderByClientId(clientId);
 
             if (!order) {
