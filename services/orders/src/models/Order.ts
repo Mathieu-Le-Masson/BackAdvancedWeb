@@ -56,7 +56,7 @@ Order.init({
     status: {
         type: DataTypes.ENUM('panier','pending', 'preparing', 'ready', 'delivering', 'delivered', 'cancelled'),
         allowNull: false,
-        defaultValue: 'pending'
+        defaultValue: 'panier'
     },
     createdAt: {
         type: DataTypes.DATE,
