@@ -16,8 +16,17 @@ const deleteOrderItemsByOrderId = async (orderId: number) => {
   await OrderItemsModels.destroy({ where: { orderId } });
 };
 
+const deleteOrderItemsById = async (orderItemId: number) => {
+    const orderItem = await OrderItemsModels.findByPk(orderItemId);
+    if (!orderItem) {
+        throw new Error('No order item found for the given ID');
+    }
+    await OrderItemsModels.destroy({ where: { id: orderItemId } });
+}
+
 export default {
   createOrderItem,
   getOrderItemsByOrderId,
   deleteOrderItemsByOrderId,
+  deleteOrderItemsById,
 };

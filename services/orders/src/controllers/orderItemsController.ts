@@ -35,3 +35,14 @@ export const deleteOrderItemsByOrderId = async (req: Request, res: Response) => 
     res.status(500).json({ error: errorMessage });
   }
 };
+
+export const deleteOrderItemsById = async (req: Request, res: Response) => {
+  try {
+    const { orderItemId } = req.params;
+    await orderItemsService.deleteOrderItemsById(Number(orderItemId));
+    res.status(204).send();
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Une erreur inconnue est survenue.';
+    res.status(500).json({ error: errorMessage });
+  }
+}
