@@ -27,6 +27,16 @@ export default class RestaurantService {
                 addressId = newAddress.id;
             }
 
+            const defaultOpeningHours = {
+                "monday": "12:00-14:30, 19:00-22:30",
+                "tuesday": "12:00-14:30, 19:00-22:30",
+                "wednesday": "12:00-14:30, 19:00-22:30",
+                "thursday": "12:00-14:30, 19:00-22:30",
+                "friday": "12:00-14:30, 19:00-23:00",
+                "saturday": "12:00-15:00, 19:00-23:00",
+                "sunday": "12:00-15:00"
+            }
+
             // Créer le restaurant avec la référence à l'adresse
             const restaurant = await Restaurant.create({
                 name: restaurantData.name,
@@ -36,7 +46,7 @@ export default class RestaurantService {
                 cuisine: restaurantData.cuisine,
                 priceRange: restaurantData.priceRange,
                 capacity: restaurantData.capacity,
-                openingHours: restaurantData.openingHours,
+                openingHours: restaurantData.openingHours || defaultOpeningHours,
                 ownerId: restaurantData.ownerId,
                 address: addressId,
                 addressString: restaurantData.addressString,

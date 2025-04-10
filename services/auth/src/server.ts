@@ -6,8 +6,9 @@ import swaggerSpec from './config/swagger';
 import authRoutes from './routes/authRoutes';
 import usersRoutes from './routes/usersRoutes';
 import healthRoutes from './routes/healthRoutes';
-import sequelize, { createDatabaseIfNotExists } from './config/database';
-import { initAdminUser } from './utils/initAdmin';
+import notificationRoutes from './routes/notificationRoutes';
+import sequelize, {createDatabaseIfNotExists} from './config/database';
+import {initAdminUser} from './utils/initAdmin';
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/auth-health', healthRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
