@@ -10,10 +10,10 @@ const router = Router();
 
 router.post('/', createOrderItem);
 // @ts-ignore
-router.get('/orderId', getOrderItemsByOrderId);
+router.get('/:orderId', getOrderItemsByOrderId);
 router.get('/')
-router.delete('/orderId', deleteOrderItemsByOrderId);
-router.delete('/id', deleteOrderItemsById);
+router.delete('/:orderId', deleteOrderItemsByOrderId);
+router.delete('/:id', deleteOrderItemsById);
 export default router;
 
 /**
