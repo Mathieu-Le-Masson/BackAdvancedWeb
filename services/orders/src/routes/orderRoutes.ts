@@ -8,6 +8,8 @@ const orderController = new OrderController();
 router.get('/', orderController.getOrders);
 router.get('/:id', orderController.getOrderById);
 router.get('/ByClient/:clientId', orderController.getOrderByClientId);
+router.get('/ByRestaurant/:restaurantId', orderController.getOrderByRestaurantId);
+router.get('/ByDeliverer/:delivererId', orderController.getOrderByDelivererId);
 router.post('/', orderController.createOrder);
 router.put('/:id', orderController.updateOrder);
 router.patch('/:id/status', orderController.updateOrderStatus);

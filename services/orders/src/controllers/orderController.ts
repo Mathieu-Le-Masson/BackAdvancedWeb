@@ -54,6 +54,40 @@ export default class OrderController {
         }
     }
 
+    getOrderByDelivererId = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const delivererId = req.params.delivererId;
+            const order = await this.orderService.getOrderByDelivererId(delivererId);
+
+            if (!order) {
+                res.status(404).json({ message: 'Commande non trouvée' });
+                return;
+            }
+
+            res.json(order);
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
+            res.status(500).json({message: 'Erreur lors de la récupération de la commande', error: errorMessage});
+        }
+    }
+
+    getOrderByRestaurantId = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const restaurantId = req.params.restaurantId;
+            const order = await this.orderService.getOrderByRestaurantId(restaurantId);
+
+            if (!order) {
+                res.status(404).json({message: 'Commande non trouvée'});
+                return;
+            }
+
+            res.json(order);
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
+            res.status(500).json({message: 'Erreur lors de la récupération de la commande', error: errorMessage});
+        }
+    }
+
     createOrder = async (req: Request, res: Response): Promise<void> => {
         console.log('ici222222222');
 

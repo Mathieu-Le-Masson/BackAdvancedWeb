@@ -38,8 +38,8 @@ export const deleteOrderItemsByOrderId = async (req: Request, res: Response) => 
 
 export const deleteOrderItemsById = async (req: Request, res: Response) => {
   try {
-    const { orderItemId } = req.params;
-    await orderItemsService.deleteOrderItemsById(Number(orderItemId));
+    const { id } = req.params
+    await orderItemsService.deleteOrderItemsById(Number(id));
     res.status(204).send();
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Une erreur inconnue est survenue.';

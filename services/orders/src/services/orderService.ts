@@ -20,6 +20,20 @@ export default class OrderService {
         });
     }
 
+    async getOrderByRestaurantId(restaurantId: string) {
+        return await Order.findAll({
+            where: { restaurantId },
+            order: [['createdAt', 'DESC']]
+        });
+    }
+
+    async getOrderByDelivererId(delivererId: string) {
+        return await Order.findAll({
+            where: { delivererId },
+            order: [['createdAt', 'DESC']]
+        });
+    }
+
     async createOrder(orderData: any) {
         try {
             orderData.deliveryPrice = 4; // Prix de livraison par défaut
