@@ -3,7 +3,7 @@ import Notification from '../models/Notification';
 
 export const createNotification = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { userId, message } = req.body;
+        const { userId, message, livreur } = req.body;
 
         if (!userId || !message) {
             res.status(400).json({ message: 'L\'ID utilisateur et le message sont requis' });
@@ -12,7 +12,8 @@ export const createNotification = async (req: Request, res: Response): Promise<v
 
         const notification = await Notification.create({
             userId,
-            message
+            message,
+            livreur
         });
 
         res.status(201).json({
@@ -40,7 +41,7 @@ export const getUserNotifications = async (req: Request, res: Response): Promise
         const notifications = await Notification.findAll({
             where: { userId },
             order: [['createdAt', 'DESC']],
-            limit: 5
+            limit: 3
         });
 
         res.status(200).json({
