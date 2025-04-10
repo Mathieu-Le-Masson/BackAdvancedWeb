@@ -13,7 +13,7 @@ export default class OrderService {
         return await Order.findByPk(id);
     }
 
-    async getOrderByClientId(clientId: number) {
+    async getOrderByClientId(clientId: string) {
         return await Order.findAll({
             where: { clientId },
             order: [['createdAt', 'DESC']]

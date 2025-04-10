@@ -5,8 +5,8 @@ class Order extends Model {
     public id!: number;
     public orderNumber!: number;
     public clientId!: string;
-    public restaurantId!: string | null;
-    public price!: number;
+    public restaurantId!: string;
+    public price!: number | null;
     public distance!: number | null;
     public duration!: number | null;
     public delivererId!: string | null;
@@ -15,8 +15,8 @@ class Order extends Model {
     public totalAmount!: number | null;
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date | null;
-    public destination!: string;
-    public origin!: string;
+    public destination!: string | null;
+    public origin!: string |null ;
     public deliveryPrice!: number | null;
 }
 
@@ -36,11 +36,11 @@ Order.init({
     },
     restaurantId: {
         type: DataTypes.UUID,
-        allowNull: true
+        allowNull: false
     },
     price: {
         type: DataTypes.DECIMAL(10, 2),
-        allowNull: false
+        allowNull: true
     },
     distance: {
         type: DataTypes.DECIMAL(10, 2),
@@ -78,11 +78,11 @@ Order.init({
     },
     origin: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     destination: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     deliveryPrice: {
         type: DataTypes.DECIMAL(10, 2),
