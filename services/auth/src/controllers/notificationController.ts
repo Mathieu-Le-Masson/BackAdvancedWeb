@@ -55,3 +55,24 @@ export const getUserNotifications = async (req: Request, res: Response): Promise
         });
     }
 };
+
+export const getDeliveryNotifications = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const notifications = await Notification.findAll({
+            where: { livreur: true },
+            order: [['createdAt', 'DESC']],
+            limit: 3
+        });
+
+        res.status(200).json({
+            notifications
+        });
+    } catch (error) {
+        console.error('Erreur lors de la récupération des notifications livreur:', error);
+        res.status(500).json({
+            message: 'Erreur serveur lors de la récupération des notifications livreur',
+            error: error instanceof Error ? error.message : 'Erreur inconnue'
+        });
+    }
+};
+
