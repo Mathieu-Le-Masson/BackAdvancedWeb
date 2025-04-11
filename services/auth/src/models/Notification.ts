@@ -6,6 +6,7 @@ class Notification extends Model {
     public id!: number;
     public userId!: string;
     public message!: string;
+    public livreur!: boolean;
 }
 
 Notification.init({
@@ -25,6 +26,11 @@ Notification.init({
     message: {
         type: DataTypes.TEXT,
         allowNull: false,
+    },
+    livreur: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+        defaultValue: false,
     },
 }, {
     sequelize,
